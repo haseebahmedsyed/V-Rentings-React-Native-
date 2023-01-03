@@ -32,8 +32,7 @@ export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
         }
     }
     
-    let carsResulted = await new Fiteration(carsFiltered,req.query).sortByPrice().sortByRating()
-
+    let carsResulted = await new Fiteration(carsFiltered,req.query).sortByPrice().sortByRating().sortByDistance()
     res.json(carsResulted.cars)
 
 }
