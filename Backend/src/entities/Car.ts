@@ -8,10 +8,26 @@ export enum Transmission {
     Manual = "Manual"
 }
 
+export enum carType{
+    Economy = "Economy",
+    Compact = "Compact",
+    SUV="SUV",
+    Standard = "Standard",
+    Intermediate = "Intermediate",
+    _7_Seat_Minivan = "7-Seat Minivan"
+}
+
 @Entity('car')
 export class Car extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string
+
+    @Column({
+        type:'enum',
+        enum:carType,
+        default:carType.Economy
+    })
+    type:string
 
     @Column()
     name: string

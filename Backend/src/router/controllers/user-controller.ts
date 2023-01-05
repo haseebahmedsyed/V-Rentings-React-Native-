@@ -74,8 +74,7 @@ export const Login=async(req:Request,res:Response,next:NextFunction)=>{
         return next(createError(404,"Please signup first"))
     }
 
-    let auth =await bcrypt.compare(password,user.password) 
-    console.log(auth)
+    let auth:boolean =await bcrypt.compare(password,user.password) 
     if(auth){
         createCookie(user,200,res)
     }else{
@@ -96,7 +95,7 @@ export const Logout=(req:Request,res:Response,next:NextFunction)=>{
 
 }
 
-export const getMe=async(req:Request,res:Response,next:NextFunction)=>{
+export const getMe=async(req:Request,res:Response,next:NextFunction):Promise<Response>=>{
 
     const user = await dataSource.    
     createQueryBuilder()

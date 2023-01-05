@@ -5,11 +5,14 @@ import { Rent } from "../../entities/Rents";
 import { createError } from '../../utils/error';
 import { dataSource } from '../../index'
 import { Fiteration } from "../../utils/Filteration";
+import { calculateDistance } from "../../utils/calDistance";
 
 
 
 export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
     const { startDate, endDate } = req.body;
+    const {latitude,longitude} = req.query;
+
     let cars = await dataSource.createQueryBuilder()
     .select('car')
     .from(Car,'car')
@@ -27,12 +30,13 @@ export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
             }
         }
 
-        if(bool==false){
+        if(bool==false && Number(calculateDistance(Number(cars[i].location.latitude),Number(cars[i].location.longitude),Number(latitude),Number(longitude)))<=15){
             carsFiltered.push(cars[i])
         }
     }
     
     let carsResulted = await new Fiteration(carsFiltered,req.query).sortByPrice().sortByRating().sortByDistance()
+    .priceRange().filterTransmission().filterByPassengers().filterBySize()
     res.json(carsResulted.cars)
 
 }
@@ -102,7 +106,6 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
 
         await rent.save();
 
-
         car.rents = [...car.rents,rent];
         await car.save();
         
@@ -120,7 +123,6 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
         let rents = [...user.rents, rent];
         user.rents = rents;
         await user.save();
-
         res.json({
             success: true,
             message: "Successfully Booked",
@@ -156,7 +158,8 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
             price: req.body.price,
             rating: req.body.rating,
             location: req.body.location,
-            user: user
+            user: user,
+            type:req.body.type
         })
 
         await car.save();
@@ -167,7 +170,6 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
 
 
     } catch (error) {
-        console.log(error)
         return next(error)
     }
 }
