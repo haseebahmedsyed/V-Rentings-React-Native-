@@ -8,7 +8,6 @@ import { Fiteration } from "../../utils/Filteration";
 import { calculateDistance } from "../../utils/calDistance";
 
 
-
 export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
     const { startDate, endDate } = req.body;
     const {latitude,longitude} = req.query;

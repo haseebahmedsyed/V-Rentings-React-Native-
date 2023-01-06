@@ -41,7 +41,7 @@ export class Car extends BaseEntity {
     @Column()
     price: number
 
-    @Column()
+    @Column({nullable:true})
     rating: string
 
     @OneToMany(()=>Rent,rent=>rent.car)
@@ -49,7 +49,6 @@ export class Car extends BaseEntity {
 
     @OneToMany(()=>Image,image=>image.car)
     images:Image[]
-
 
     @Column({
         type: 'simple-json'
