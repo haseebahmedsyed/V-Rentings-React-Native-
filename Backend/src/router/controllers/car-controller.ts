@@ -12,6 +12,10 @@ export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
     const { startDate, endDate } = req.body;
     const {latitude,longitude} = req.query;
 
+    if(startDate < new Date(Date.now()).getTime()){
+        return next(createError(400,"Please select valid date"))
+    }
+
     let cars = await dataSource.createQueryBuilder()
     .select('car')
     .from(Car,'car')

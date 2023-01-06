@@ -1,8 +1,10 @@
 import { View, Text, SafeAreaView, TextInput, PermissionsAndroid,TouchableOpacity } from 'react-native'
 import React, { useRef, useState, useEffect } from 'react'
 import MapView, { Marker } from 'react-native-maps';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = ({ route }) => {
+  const navigation = useNavigation()
   const { latitude, longitude } = route.params
 
   return (
@@ -28,7 +30,7 @@ const Home = ({ route }) => {
           />
         </MapView>
 
-      <TouchableOpacity className='flex mt-5 bg-[#00ccbb] w-72 h-12 rounded-lg text-center justify-center items-center ml-auto mr-auto mb-3'>
+      <TouchableOpacity className='flex mt-5 bg-[#00ccbb] w-72 h-12 rounded-lg text-center justify-center items-center ml-auto mr-auto mb-3' onPress={()=>navigation.navigate('carlist')}>
         <Text className='text-white font-bold text-xl'>Search</Text>
       </TouchableOpacity>
       </View>

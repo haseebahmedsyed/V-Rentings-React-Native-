@@ -14,6 +14,7 @@ import Login from './pages/Login';
 import SignUp from './pages/Signup';
 import Home from './components/Home';
 import Home1 from './components/Home1';
+import CarList from './pages/CarList';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,9 @@ const App= () => {
           headerTitleAlign: 'center' 
         }} />
         <Stack.Screen name="Home1" component={Home1} options={{
+          headerShown:false
+        }} />
+        <Stack.Screen name="carlist" component={CarList} options={{
           headerShown:false
         }} />
       </Stack.Navigator>
