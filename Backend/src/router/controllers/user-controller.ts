@@ -61,6 +61,7 @@ export const createUser=async(req:Request,res:Response,next:NextFunction)=>{
 }
 
 export const Login=async(req:Request,res:Response,next:NextFunction)=>{
+    console.log(req.body)
     const {email,password} = req.body;
 
     if(!email || !password){

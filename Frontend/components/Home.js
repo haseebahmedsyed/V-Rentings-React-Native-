@@ -2,10 +2,26 @@ import { View, Text, SafeAreaView, TextInput, PermissionsAndroid,TouchableOpacit
 import React, { useRef, useState, useEffect } from 'react'
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch,useSelector } from 'react-redux';
+import { getCars } from '../redux/actions/carsAction';
 
-const Home = ({ route }) => {
+const Home = () => {
+  const dispatch = useDispatch()
   const navigation = useNavigation()
-  const { latitude, longitude } = route.params
+  const {location,date} = useSelector(state=>state.initLocation)
+  const {cars,success} = useSelector(state=>state.getCars)
+  const [latitude,setLatitude] = useState(location.latitude)
+  const [longitude,setLongitude] = useState(location.longitude)
+
+  const handleSearch=()=>{
+    dispatch(getCars(date,{latitude:latitude,longitude:longitude}))
+  }
+
+  useEffect(()=>{
+    if(success){
+      navigation.navigate('carlist')
+    }
+  },[success,cars])
 
   return (
     <SafeAreaView>
@@ -20,7 +36,10 @@ const Home = ({ route }) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          onRegionChange={(r) => console.log(r)}
+          onRegionChange={(r) => {
+            setLatitude(r.latitude)
+            setLongitude(r.longitude)
+            }}
         >
           <Marker
             coordinate={{
@@ -30,7 +49,7 @@ const Home = ({ route }) => {
           />
         </MapView>
 
-      <TouchableOpacity className='flex mt-5 bg-[#00ccbb] w-72 h-12 rounded-lg text-center justify-center items-center ml-auto mr-auto mb-3' onPress={()=>navigation.navigate('carlist')}>
+      <TouchableOpacity onPress={handleSearch} className='flex mt-5 bg-[#00ccbb] w-80 h-12 rounded-3xl text-center justify-center items-center ml-auto mr-auto mb-3'>
         <Text className='text-white font-bold text-xl'>Search</Text>
       </TouchableOpacity>
       </View>

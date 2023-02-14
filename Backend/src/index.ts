@@ -7,6 +7,13 @@ import { Image } from './entities/Images'
 import userRouter from './router/routes/user-route'
 import carRouter from './router/routes/car-route'
 const cookieParser = require('cookie-parser');
+var cors = require('cors');
+const corsOptions ={
+    // origin:'*', 
+    origin:true, 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
 
 const app = express()
 
@@ -36,6 +43,8 @@ app.use(ErrorHandler)
 app.use('/api',userRouter)
 app.use('/api',carRouter)
 app.use(cookieParser())
+app.use(cors(corsOptions))
+
 
 app.listen(5000,()=>{
     console.log("Listening to port 5000...")

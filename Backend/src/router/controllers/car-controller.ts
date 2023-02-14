@@ -40,7 +40,7 @@ export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
     
     let carsResulted = await new Fiteration(carsFiltered,req.query).sortByPrice().sortByRating().sortByDistance()
     .priceRange().filterTransmission().filterByPassengers().filterBySize()
-    res.json(carsResulted.cars)
+    res.json({cars:carsResulted.cars})
 
 }
 

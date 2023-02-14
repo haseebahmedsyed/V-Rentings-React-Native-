@@ -1,12 +1,13 @@
 import React, { useState ,useEffect} from "react";
-import { SafeAreaView, StyleSheet, View, Text,TouchableOpacity,Image, PermissionsAndroid } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text,TouchableOpacity,Image, PermissionsAndroid,StatusBar } from "react-native";
 import DateRangePicker from "rn-select-date-range";
 import Header from "./Header";
 import { useNavigation } from "@react-navigation/native";
 import Geolocation from 'react-native-geolocation-service';
-
+import { useDispatch } from "react-redux";
 
 const Home1 = () => {
+  const dispatch = useDispatch()
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
 
@@ -27,6 +28,10 @@ const Home1 = () => {
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         Geolocation.getCurrentPosition(
           (position) => {
+            dispatch({
+              type:'INIT_LOCATION',
+              payload:{latitude:parseFloat(position.coords.latitude),longitude:parseFloat(position.coords.longitude)}
+            })
             setLatitude(parseFloat(position.coords.latitude))
             setLongitude(parseFloat(position.coords.longitude))
 
@@ -55,12 +60,21 @@ const Home1 = () => {
     const [selectedRange, setRange] = useState({});
   return (
     <SafeAreaView className='flex-1 bg-[#ffffff]'>
+    <StatusBar backgroundColor="#00ccbb" barStyle="light-content" />
     <Header/>
       <View style={styles.container}>
       <Text className='text-2xl text-center mb-7 font-bold text-gray-400'>Select the Dates</Text>
         <DateRangePicker
           onSelectDateRange={(range) => {
             setRange(range);
+            console.log(Date.parse(range.firstDate))
+            dispatch({
+              type:'INIT_DATE',
+              payload:{
+                startDate:Date.parse(range.firstDate),
+                endDate:Date.parse(range.secondDate)
+              }
+            })
           }}
           blockSingleDateSelection={true}
           responseFormat="YYYY-MM-DD"
@@ -70,13 +84,9 @@ const Home1 = () => {
           confirmBtnTitle=<Text className='text-green-600 font-bold text-lg'>Confirm</Text>
         />
       </View>
-        <TouchableOpacity onPress={()=>navigation.navigate("Home2",{
-          latitude,
-          longitude
-        })} className='flex mt-5 bg-[#00ccbb] w-72 h-12 rounded-lg text-center justify-center items-center ml-auto mr-auto'>
+        <TouchableOpacity disabled={latitude==0 || longitude==0 || selectedRange=={}} onPress={()=>navigation.navigate("Home2")} className='flex mt-5 bg-[#00ccbb] w-80 h-12 rounded-3xl text-center justify-center items-center ml-auto mr-auto'>
           <Text className='text-white font-bold text-xl'>Continue</Text>
         </TouchableOpacity>
-
     </SafeAreaView>
   )
 }
