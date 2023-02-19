@@ -21,7 +21,7 @@ export const carSchema = z.object({
 
     price:z.number({
         required_error:"rent price is mandatory"
-    }).min(100,"Rent shoul be atleast 100$"),
+    }),
 
     location:z.object({
         latitude:z.string(),

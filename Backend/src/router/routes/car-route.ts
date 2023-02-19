@@ -1,5 +1,5 @@
 import express from 'express'
-import {createCar,BookCar,getCar,cancelBooking,getCars} from '../controllers/car-controller'
+import {createCar,BookCar,getCar,cancelBooking,getCars,getAllCars,updateCar} from '../controllers/car-controller'
 import { authorize } from '../../middleware/auth';
 import {validateSchema} from '../../middleware/zodValidation'
 import { carSchema } from '../../schema/car';
@@ -12,5 +12,7 @@ router.post('/car/book/:carID',authorize,BookCar);
 router.delete('/car/cancelBooking/:rentID',authorize,cancelBooking);
 router.get('/car/getCar/:carID',getCar);
 router.get('/car/getCars',getCars);
+router.get('/car/getAllCars',getAllCars);
+router.put('/car/updateCar/:carID',updateCar);
 
 export default router

@@ -4,10 +4,14 @@ import {composeWithDevTools} from 'redux-devtools-extension'
 
 import {
     loginReducer,
-    initLocation
+    initLocation,
+    isUserExist
 } from './reducers/accountReducers'
 import {
-    getCarReducer
+    getCarReducer,
+    getCar,
+    addCar,
+    editCar
 } from './reducers/carReducers'
 import {
     filterReducer,
@@ -19,7 +23,11 @@ const reducer = combineReducers({
     getCars:getCarReducer,
     initLocation,
     filterReducer,
-    sortReducer
+    sortReducer,
+    getCar,
+    isUserExist,
+    addCar,
+    editCar
 })
 
 const initialState = {};

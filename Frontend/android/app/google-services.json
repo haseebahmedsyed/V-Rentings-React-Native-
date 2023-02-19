@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "345110315853",
+    "project_id": "v-rentings",
+    "storage_bucket": "v-rentings.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345110315853:android:6991936f0ba67f49c36d04",
+        "android_client_info": {
+          "package_name": "com.rent_pe_lo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345110315853-ie2do06m0ccf8l1al4ch1u18nspb7pj1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rent_pe_lo",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "345110315853-kjpeaigi09805a381oke1e54iei9l54p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGSSYtghtcBcZNCUCckN4muiF7PHAZ9_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345110315853-bv2e3kkqa5gv2uhg7p77tlrgoc9u2r3b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

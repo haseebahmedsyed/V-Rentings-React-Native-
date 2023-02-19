@@ -67,9 +67,18 @@ export const Login=async(req:Request,res:Response,next:NextFunction)=>{
     if(!email || !password){
         return next(createError(400,"Enter credentials properly"))
     }
-    let user = await User.findOne({where:{
-        email:email
-    }})
+    // let user = await User.findOne({where:{
+    //     email:email
+    // }})
+
+    const user = await dataSource.    
+    createQueryBuilder()
+    .select("user")
+    .from(User, "user")
+    .leftJoinAndSelect("user.cars", "car")
+    .leftJoinAndSelect('user.rents','rent')
+    .where('user.email = :email',{email:email})
+    .getOne()
 
     if(!user){
         return next(createError(404,"Please signup first"))
@@ -108,4 +117,29 @@ export const getMe=async(req:Request,res:Response,next:NextFunction):Promise<Res
     .getOne()
 
     return res.status(200).json({user})
+}
+
+export const checkEmail=async(req:Request,res:Response,next:NextFunction)=>{
+    const user = await dataSource.
+    createQueryBuilder()
+    .select("user")
+    .from(User,'user')
+    .where('user.email = :email',{email:req.params.email})
+    .getOne()
+
+    if(!user){
+        return res.json({found:false})
+    }
+
+    return res.json({found:true})
+}
+
+export const deleteUser=async(req:Request,res:Response,next:NextFunction)=>{
+    await dataSource.
+    createQueryBuilder()
+    .delete()
+    .from(User,'user')
+    .where('user.email = :email',{email:req.params.email})
+
+    return res.json({deleted:true})
 }

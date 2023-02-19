@@ -4,16 +4,22 @@ import { useNavigation } from '@react-navigation/native';
 import Geolocation from 'react-native-geolocation-service';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { login } from '../redux/actions/accountActions';
+import { checkEmail, login } from '../redux/actions/accountActions';
 import {useDispatch,useSelector} from 'react-redux'
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 const Login = () => {
   const dispatch = useDispatch();
   const {success,error,loading,user} = useSelector(state=>state.loginReducer)
+  const {found,error:foundError,loading:foundLoading} = useSelector(state=>state.isUserExist)
   const navigation = useNavigation();
   const [credentials,setCredentials] = useState({
-    email:'',
-    password:''
+    email:'syedhaseebahmed380@gmail.com',
+    password:'syedhaseebahmed38'
+  })
+  const [userInfo,setUserInfo] = useState({
+    name:'',
+    email:''
   })
   const onChangeText=(text,name)=>{
     setCredentials({...credentials,[name]:text})
@@ -24,11 +30,47 @@ const Login = () => {
   }
 
   useEffect(()=>{
-    console.log(success)
     if(success){
       navigation.navigate("Home")
+      navigation.reset({
+        index:0,
+        routes:[{name:'Home'}]
+      })
     }
   },[success])
+
+  // useEffect(()=>{
+  //   if(!found){
+  //     navigation.navigate('SignUp',{name:userInfo.name,email:userInfo.email})
+  //   }
+  // },[found])
+
+  useEffect(()=>{
+    GoogleSignin.configure()
+  },[])
+
+  signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      setUserInfo({name: userInfo.name, email: userInfo.email})
+      dispatch(checkEmail(userInfo.user.email));
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        // user cancelled the login flow
+        console.log(error)
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        // operation (e.g. sign in) is in progress already
+        console.log(error)
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        // play services not available or outdated
+        console.log(error)
+      } else {
+        // some other error happened
+        console.log(error)
+      }
+    }
+  };
 
   return (
     <SafeAreaView className='bg-[#ffffff] flex-1'>
@@ -53,6 +95,7 @@ const Login = () => {
               underlineColorAndroid='transparent'
               placeholder='Email'
               onChangeText={(txt)=>onChangeText(txt,"email")}
+              value={credentials.email}
             />
           </View>
           <View className='flex-row items-center'>
@@ -68,9 +111,10 @@ const Login = () => {
               secureTextEntry
               placeholder='Password'
               onChangeText={(txt)=>onChangeText(txt,"password")}
+              value={credentials.password}
             />
           </View>
-          <TouchableOpacity disabled={credentials.email=='' || credentials.password==''} onPress={handleLogin} className='mt-7 bg-[#00ccbb] w-80 h-12 rounded-3xl text-center justify-center items-center'>
+          <TouchableOpacity disabled={credentials.email=='' || credentials.password==''} onPress={handleLogin} className='mt-7 bg-[#00ccbb] w-80 h-12 rounded-2xl text-center justify-center items-center'>
             <Text className='text-white font-bold text-xl'>Login</Text>
           </TouchableOpacity>
         </View>
@@ -79,7 +123,7 @@ const Login = () => {
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}><Text className='font-bold text-lg text-[#00ccbb]'>Register</Text></TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity className='ml-auto mr-auto flex-row space-x-3 border h-14 w-72 rounded-lg justify-center items-center mt-5 border-gray-400 bg-[#ffffff] shadow-2xl'>
+      <TouchableOpacity onPress={signIn} className='ml-auto mr-auto flex-row space-x-3 border h-14 w-72 rounded-lg justify-center items-center mt-5 border-gray-400 bg-[#ffffff] shadow-2xl'>
         <View>
           <Image
             source={require('../components/google.png')}

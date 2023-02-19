@@ -1,5 +1,5 @@
 import { View, Text,StyleSheet,Image } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import {
     DrawerContentScrollView,
@@ -9,9 +9,26 @@ import {
 import {Drawer} from './DrawerNavigator'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-
+import { useDispatch, useSelector } from 'react-redux';
+import {logOut} from '../Frontend/redux/actions/accountActions'
+import { useNavigation } from '@react-navigation/native';
 
 const DrawerContent = (props) => {
+    const dispatch = useDispatch()
+    const {loading,error,isLoggedOut}= useSelector(state=>state.loginReducer)
+    const navigation = useNavigation()
+    useEffect(()=>{
+        if(error){
+            console.log(error)
+        }
+        if(isLoggedOut){
+            navigation.navigate('Login')
+            navigation.reset({
+                index:0,
+                routes:[{name:'Login'}]
+              })
+        }
+    },[isLoggedOut,error])
     return (
         <DrawerContentScrollView style={{margin:0,padding:0}} {...props}>
         
@@ -48,6 +65,7 @@ const DrawerContent = (props) => {
                     fontWeight:'bold',
                     marginTop:10
                 }}
+                onPress={()=>navigation.navigate('MyCars')}
             />
             <DrawerItem
                 label={"View Rents"}
@@ -56,6 +74,7 @@ const DrawerContent = (props) => {
                     fontWeight:'bold',
                     marginTop:10
                 }}
+                onPress={()=>navigation.navigate('MyRents')}
             />
             <DrawerItem
                 label={"Logout"}
@@ -64,6 +83,7 @@ const DrawerContent = (props) => {
                     fontWeight:'bold',
                     marginTop:10
                 }}
+                onPress={()=>dispatch(logOut())}
             />
 
         </DrawerContentScrollView>

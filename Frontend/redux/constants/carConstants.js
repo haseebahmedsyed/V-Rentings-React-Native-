@@ -1,3 +1,18 @@
 export const GET_CARS_REQUEST = 'GET_CARS_REQUEST';
 export const GET_CARS_SUCCESS = 'GET_CARS_SUCCESS';
 export const GET_CARS_FAIL = 'GET_CARS_FAIL';
+
+export const GET_CAR_REQUEST = 'GET_CAR_REQUEST'
+export const GET_CAR_SUCCESS = 'GET_CAR_SUCCESS'
+export const GET_CAR_FAIL = 'GET_CAR_FAIL'
+
+export const ADD_CAR_REQUEST = 'ADD_CAR_REQUEST'
+export const ADD_CAR_SUCCESS = 'ADD_CAR_SUCCESS'
+export const ADD_CAR_FAIL = 'ADD_CAR_FAIL'
+export const ADD_CAR_RESET = 'ADD_CAR_RESET'
+
+export const EDIT_CAR_REQUEST = 'EDIT_CAR_REQUEST'
+export const EDIT_CAR_SUCCESS = 'EDIT_CAR_SUCCESS'
+export const EDIT_CAR_FAIL = 'EDIT_CAR_FAIL'
+export const EDIT_CAR_RESET = 'EDIT_CAR_RESET'
+

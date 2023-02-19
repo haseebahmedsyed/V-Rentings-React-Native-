@@ -8,8 +8,8 @@ import { getCars } from '../redux/actions/carsAction';
 const Home = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const {location,date} = useSelector(state=>state.initLocation)
   const {cars,success} = useSelector(state=>state.getCars)
+  const {location,date} = useSelector(state=>state.initLocation)
   const [latitude,setLatitude] = useState(location.latitude)
   const [longitude,setLongitude] = useState(location.longitude)
 

@@ -2,5 +2,13 @@ export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
+export const LOGOUT_FAIL = 'LOGOUT_FAIL';
+
 export const INIT_LOCATION = 'INIT_LOCATION';
 export const INIT_DATE = 'INIT_DATE';
+
+export const CHECK_USER_REQUEST = 'CHECK_USER_REQUEST';
+export const CHECK_USER_SUCCESS = 'CHECK_USER_SUCCESS';
+export const CHECK_USER_FAIL = 'CHECK_USER_FAIL';

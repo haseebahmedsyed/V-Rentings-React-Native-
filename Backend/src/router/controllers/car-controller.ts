@@ -58,6 +58,7 @@ export const cancelBooking=async(req: Request, res: Response, next: NextFunction
 }
 
 export const getCar=async(req: Request, res: Response, next: NextFunction)=>{
+    console.log(req.params.carID)
     let car = await dataSource.createQueryBuilder()
     .select('car')
     .from(Car,'car')
@@ -159,7 +160,8 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
             passengers: req.body.passengers,
             bags: req.body.bags,
             price: req.body.price,
-            rating: req.body.rating,
+            // rating: req.body.rating,
+            rating: '0.0',
             location: req.body.location,
             user: user,
             type:req.body.type
@@ -175,4 +177,25 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
     } catch (error) {
         return next(error)
     }
+}
+
+export const getAllCars=async(req:Request,res:Response,next:NextFunction)=>{
+    const cars = await dataSource
+    .createQueryBuilder()
+    .select('car')
+    .from(Car,'car')
+    .getMany()
+
+    res.status(200).json({cars})
+}
+
+export const updateCar=async(req:Request,res:Response,next:NextFunction)=>{
+    await dataSource
+    .createQueryBuilder()
+    .update(Car)
+    .set({...req.body})
+    .where('id =:carID',{carID:req.params.carID})
+    .execute();
+
+    res.status(200).json({success:true})
 }

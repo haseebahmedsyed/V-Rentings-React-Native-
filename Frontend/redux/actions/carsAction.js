@@ -1,7 +1,17 @@
 import {
     GET_CARS_REQUEST,
     GET_CARS_SUCCESS,
-    GET_CARS_FAIL
+    GET_CARS_FAIL,
+    GET_CAR_REQUEST,
+    GET_CAR_SUCCESS,
+    GET_CAR_FAIL,
+    ADD_CAR_REQUEST,
+    ADD_CAR_SUCCESS,
+    ADD_CAR_FAIL,
+    EDIT_CAR_REQUEST,
+    EDIT_CAR_SUCCESS,
+    EDIT_CAR_FAIL,
+    EDIT_CAR_RESET
 } from '../constants/carConstants'
 import Client from '../Client'
 import store from '../store'
@@ -39,6 +49,87 @@ export const getCars=()=>async(dispatch)=>{
         dispatch({
             type: GET_CARS_FAIL,
             payload: error.response.data.message
+        })
+    }
+}
+
+export const getCar=(carID)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:GET_CAR_REQUEST
+        })
+        const {data} = await Client.get(`/api/car/getCar/${carID}`)
+        dispatch({
+            type:GET_CAR_SUCCESS,
+            payload:data.car
+        })
+
+    } catch (error) {
+        dispatch({
+            type:GET_CAR_FAIL,
+            payload:error.response.data.message
+        })
+    }
+}
+
+export const addCar=(body)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:ADD_CAR_REQUEST
+        })
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }
+
+        const {data} = await Client.post('/api/car/create',body,config)
+        dispatch({
+            type:ADD_CAR_SUCCESS,
+            payload:data.success
+        })
+
+    } catch (error) {
+        dispatch({
+            type:ADD_CAR_FAIL,
+            payload:error.response.data.message
+        })
+    }
+}
+
+export const calculateRent = ()=>{
+    let date = store.getState().initLocation.date
+    let one_day=1000*60*60*24;
+    let difference_ms =Number(date.endDate) - Number(date.startDate);
+    let days= Math.round(difference_ms/one_day);
+    return days;
+}
+
+export const editCar=(id,body)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type:EDIT_CAR_REQUEST
+        })
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }
+        await Client.put(`/user/car/updateCar/${id}`,body,config)
+
+        dispatch({
+            type:EDIT_CAR_SUCCESS,
+            payload:data.success
+        })
+
+    } catch (error) {
+        dispatch({
+            type:EDIT_CAR_FAIL,
+            payload:error.response.data.message
         })
     }
 }
