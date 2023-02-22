@@ -11,10 +11,47 @@ import {
     EDIT_CAR_REQUEST,
     EDIT_CAR_SUCCESS,
     EDIT_CAR_FAIL,
-    EDIT_CAR_RESET
+    DELETE_CAR_REQUEST,
+    DELETE_CAR_SUCCESS,
+    DELETE_CAR_FAIL,
+    BOOK_CAR_REQUEST,
+    BOOK_CAR_SUCCESS,
+    BOOK_CAR_FAIL,
 } from '../constants/carConstants'
 import Client from '../Client'
 import store from '../store'
+
+export const uploadCarImage=(formData,id)=>async(dispatch)=>{
+    try {
+        // dispatch({
+        //     type:GET_CAR_REQUEST
+        // })
+        console.log("Hi i am reducer")
+        console.log(formData)
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }
+
+        const {data} = await Client.post(`/api/image/upload/${id}`,formData,config)
+        // console.log(data.car)
+        // dispatch({
+        //     type:GET_CAR_SUCCESS,
+        //     payload:data.car
+        // })
+
+    } 
+    catch (error) {
+        // dispatch({
+        //     type:GET_CAR_FAIL,
+        //     payload:error.response.data.message
+        // })
+    }
+}
+
 
 export const getCars=()=>async(dispatch)=>{
     let loc = store.getState().initLocation.location
@@ -119,7 +156,7 @@ export const editCar=(id,body)=>async(dispatch)=>{
             },
             withCredentials: true
         }
-        await Client.put(`/user/car/updateCar/${id}`,body,config)
+        const {data} = await Client.put(`/api/car/updateCar/${id}`,body,config)
 
         dispatch({
             type:EDIT_CAR_SUCCESS,
@@ -129,6 +166,56 @@ export const editCar=(id,body)=>async(dispatch)=>{
     } catch (error) {
         dispatch({
             type:EDIT_CAR_FAIL,
+            payload:error.response.data.message
+        })
+    }
+}
+
+export const deleteCar=(id)=>async(dispatch)=>{
+    try {
+        dispatch({
+            type: DELETE_CAR_REQUEST
+        })
+
+        const {data} = await Client.delete(`/api/car/deleteCar/${id}`)
+
+        dispatch({
+            type:DELETE_CAR_SUCCESS,
+            payload:data.success
+        })
+
+    } catch (error) {
+        dispatch({
+            type:DELETE_CAR_FAIL,
+            payload:error.response.data.message
+        })
+    }
+}
+
+export const bookCar=(id)=>async(dispatch)=>{
+    let dates = store.getState().initLocation.date
+    try {
+        dispatch({
+            type: BOOK_CAR_REQUEST
+        })
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }
+
+        const {data} = await Client.post(`/api/car/book/${id}`,{startDate:dates.startDate,endDate:dates.endDate},config)
+
+        dispatch({
+            type: BOOK_CAR_SUCCESS,
+            payload:data.success
+        })
+
+    } catch (error) {
+        dispatch({
+            type: BOOK_CAR_FAIL,
             payload:error.response.data.message
         })
     }

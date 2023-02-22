@@ -1,43 +1,44 @@
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, Image, PermissionsAndroid,StatusBar } from 'react-native'
+import { ActivityIndicator, View, Text, SafeAreaView, TextInput, TouchableOpacity, Image, PermissionsAndroid, StatusBar, StyleSheet, Modal } from 'react-native'
 import React, { useRef, useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import Geolocation from 'react-native-geolocation-service';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { checkEmail, login } from '../redux/actions/accountActions';
-import {useDispatch,useSelector} from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import Loader from '../components/Loader';
 
 const Login = () => {
   const dispatch = useDispatch();
-  const {success,error,loading,user} = useSelector(state=>state.loginReducer)
-  const {found,error:foundError,loading:foundLoading} = useSelector(state=>state.isUserExist)
+  const { success, error, loading, user } = useSelector(state => state.loginReducer)
+  const { found, error: foundError, loading: foundLoading } = useSelector(state => state.isUserExist)
   const navigation = useNavigation();
-  const [credentials,setCredentials] = useState({
-    email:'syedhaseebahmed380@gmail.com',
-    password:'syedhaseebahmed38'
+  const [credentials, setCredentials] = useState({
+    email: 'syedhaseebahmed380@gmail.com',
+    password: 'syedhaseebahmed38'
   })
-  const [userInfo,setUserInfo] = useState({
-    name:'',
-    email:''
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    email: ''
   })
-  const onChangeText=(text,name)=>{
-    setCredentials({...credentials,[name]:text})
+  const onChangeText = (text, name) => {
+    setCredentials({ ...credentials, [name]: text })
   }
 
-  const handleLogin=()=>{
-    dispatch(login(credentials.email,credentials.password))
+  const handleLogin = () => {
+    dispatch(login(credentials.email, credentials.password))
   }
 
-  useEffect(()=>{
-    if(success){
+  useEffect(() => {
+    if (success) {
       navigation.navigate("Home")
       navigation.reset({
-        index:0,
-        routes:[{name:'Home'}]
+        index: 0,
+        routes: [{ name: 'Home' }]
       })
     }
-  },[success])
+  }, [success])
 
   // useEffect(()=>{
   //   if(!found){
@@ -45,15 +46,18 @@ const Login = () => {
   //   }
   // },[found])
 
-  useEffect(()=>{
+  useEffect(() => {
     GoogleSignin.configure()
-  },[])
+  }, [])
 
   signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      setUserInfo({name: userInfo.name, email: userInfo.email})
+      // await GoogleSignin.signOut();
+      // await GoogleSignin.clearCachedAccessToken();
+      // await GoogleSignin.disconnect();
+      const userInfo = await GoogleSignin.signIn({ forceCodeForRefreshToken: true });
+      setUserInfo({ name: userInfo.name, email: userInfo.email })
       dispatch(checkEmail(userInfo.user.email));
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -74,7 +78,8 @@ const Login = () => {
 
   return (
     <SafeAreaView className='bg-[#ffffff] flex-1'>
-    <StatusBar backgroundColor="#69bfb8" barStyle="light-content" />
+      <StatusBar backgroundColor="#69bfb8" barStyle="light-content" />
+      <Loader loading={loading}/>
       <LinearGradient className='h-60 w-full' start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#00b5a5', '#05f7e3', '#00ccbb']} >
         <Text className='font-bold text-5xl text-[#ebf6f7] ml-3 text-center mt-auto mb-auto'>
           V-Rentings
@@ -94,7 +99,7 @@ const Login = () => {
               autoCorrect={false}
               underlineColorAndroid='transparent'
               placeholder='Email'
-              onChangeText={(txt)=>onChangeText(txt,"email")}
+              onChangeText={(txt) => onChangeText(txt, "email")}
               value={credentials.email}
             />
           </View>
@@ -110,11 +115,11 @@ const Login = () => {
               underlineColorAndroid="transparent"
               secureTextEntry
               placeholder='Password'
-              onChangeText={(txt)=>onChangeText(txt,"password")}
+              onChangeText={(txt) => onChangeText(txt, "password")}
               value={credentials.password}
             />
           </View>
-          <TouchableOpacity disabled={credentials.email=='' || credentials.password==''} onPress={handleLogin} className='mt-7 bg-[#00ccbb] w-80 h-12 rounded-2xl text-center justify-center items-center'>
+          <TouchableOpacity disabled={credentials.email == '' || credentials.password == ''} onPress={handleLogin} className='mt-7 bg-[#00ccbb] w-80 h-12 rounded-2xl text-center justify-center items-center'>
             <Text className='text-white font-bold text-xl'>Login</Text>
           </TouchableOpacity>
         </View>
@@ -135,5 +140,7 @@ const Login = () => {
     </SafeAreaView >
   )
 }
+
+
 
 export default Login

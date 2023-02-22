@@ -77,6 +77,8 @@ export const Login=async(req:Request,res:Response,next:NextFunction)=>{
     .from(User, "user")
     .leftJoinAndSelect("user.cars", "car")
     .leftJoinAndSelect('user.rents','rent')
+    .leftJoinAndSelect('car.rents','carrents')
+    .leftJoinAndSelect('carrents.user','renter')
     .where('user.email = :email',{email:email})
     .getOne()
 

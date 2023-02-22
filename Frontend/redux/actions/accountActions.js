@@ -34,6 +34,7 @@ export const logOut = () => async (dispatch) => {
 }
 
 export const login = (email, password) => async (dispatch) => {
+    console.log(email,password)
     try {
         dispatch({
             type: LOGIN_REQUEST
@@ -54,6 +55,7 @@ export const login = (email, password) => async (dispatch) => {
         })
 
     } catch (error) {
+        console.log("Main error hoon",error)
         dispatch({
             type: LOGIN_FAIL,
             payload: error.response.data.message

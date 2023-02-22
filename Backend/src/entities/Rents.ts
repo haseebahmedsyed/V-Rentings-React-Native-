@@ -13,6 +13,9 @@ export class Rent extends BaseEntity{
     @JoinColumn({name:'user_id'})
     user:User
 
+    @Column({default:Date.now()})
+    bookingDate:String
+
     @Column()
     startDate:string
 

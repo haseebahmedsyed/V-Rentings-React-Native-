@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StatusBar, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { calculateRent, getCar } from '../redux/actions/carsAction';
+import { bookCar, calculateRent, getCar } from '../redux/actions/carsAction';
 import { useDispatch, useSelector } from 'react-redux';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,11 +11,19 @@ import { useNavigation } from '@react-navigation/native';
 const CarDetails = ({ route }) => {
     const dispatch = useDispatch()
     const { car } = useSelector(state => state.getCar)
+    const { success,loading,error } = useSelector(state => state.addCar)
     const navigation = useNavigation()
+
     useEffect(() => {
         console.log(route)
         dispatch(getCar(route.params.carID));
     }, [])
+
+    useEffect(() => {
+        if(success){
+            navigation.navigate('MyRents')
+        }
+    }, [success,error])
 
     return (
         <>
@@ -66,7 +74,7 @@ const CarDetails = ({ route }) => {
             <DetailsTab2 />
 
             <View className='bg-white mb-2'>
-                <TouchableOpacity className='bg-[#00ccbb] h-12 w-72 ml-auto mr-auto rounded-full mt-2'>
+                <TouchableOpacity onPress={()=>dispatch(bookCar(car.id))} className='bg-[#00ccbb] h-12 w-72 ml-auto mr-auto rounded-full mt-2'>
                     <Text
                         className='text-center mt-auto mb-auto text-white font-bold text-2xl '
                     >

@@ -4,6 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { useSelector, useDispatch } from 'react-redux';
 import { addCar } from '../../redux/actions/carsAction';
 import { getMe } from '../../redux/actions/accountActions';
+import { ADD_CAR_RESET } from '../../redux/constants/carConstants';
 
 const CarLocaton = ({ showMap, setShowMap, carCred,setAddCar }) => {
     const {location,date} = useSelector(state=>state.initLocation)
@@ -17,6 +18,9 @@ const CarLocaton = ({ showMap, setShowMap, carCred,setAddCar }) => {
             dispatch(getMe())
             setShowMap(false)
             setAddCar(false)
+            dispatch({
+                type:ADD_CAR_RESET
+            })
         }
     },[success,error])
 

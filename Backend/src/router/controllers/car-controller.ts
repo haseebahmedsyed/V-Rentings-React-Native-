@@ -79,6 +79,10 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
     const { startDate, endDate } = req.body;
     try {
 
+        if(Number(startDate) < new Date(Date.now()).getTime() ||  Number(endDate) < new Date(Date.now()).getTime()){
+            return next(createError(404, "Please select appropriate dates"))
+        }
+
         let car = await dataSource.createQueryBuilder()
         .select('car')
         .from(Car,'car')
@@ -184,6 +188,8 @@ export const getAllCars=async(req:Request,res:Response,next:NextFunction)=>{
     .createQueryBuilder()
     .select('car')
     .from(Car,'car')
+    .leftJoinAndSelect('car.rents','rents')
+    .leftJoinAndSelect('car.images','images')
     .getMany()
 
     res.status(200).json({cars})
@@ -199,3 +205,16 @@ export const updateCar=async(req:Request,res:Response,next:NextFunction)=>{
 
     res.status(200).json({success:true})
 }
+
+export const deleteCar=async(req:Request,res:Response,next:NextFunction)=>{
+    console.log('deleting...')
+    await dataSource
+    .createQueryBuilder()
+    .delete()
+    .from(Car,'car')
+    .where('id =:carID',{carID:req.params.carID})
+    .execute();
+
+    res.status(200).json({success:true})
+}
+

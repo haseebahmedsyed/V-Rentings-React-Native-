@@ -22,9 +22,28 @@ import Included from './pages/Included';
 import Supplier from './pages/Supplier';
 import AddCar from './components/myCars/AddCar';
 import EditCar from './components/myCars/EditCar';
+import PresentRents from './components/myCars/PresentRents';
+import PastRents from './components/myCars/PastRents';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
+
+export function CarRents({route}){
+  const {rents} = route.params
+  return (
+    <>
+    <Tab.Navigator
+    screenOptions={({route})=>({
+      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'}
+    })} 
+    >
+      <Tab.Screen name="Current" initialParams={{rents:rents}} component={PresentRents} />
+      <Tab.Screen name="Past" initialParams={{rents:rents}} component={PastRents} />
+    </Tab.Navigator>
+    </>
+  )
+}
 
 export function DetailsTab2({route}){
   return (
@@ -75,7 +94,16 @@ const App = () => {
         }} />
         <Stack.Screen name="editCar" component={EditCar} options={{
           headerShown: false
-        }} />
+        }} /> 
+        <Stack.Screen name="carrents" component={CarRents}
+        options={{
+          headerTitle:'Rents',
+          headerStyle:{backgroundColor:'#00ccbb'},
+          headerTitleStyle:{color:'#ffffff',fontSize:22},
+          headerTintColor:'#ffffff'
+          
+        }}
+         />
       </Stack.Navigator>
     </NavigationContainer>
   );

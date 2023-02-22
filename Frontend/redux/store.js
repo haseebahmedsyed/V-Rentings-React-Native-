@@ -11,7 +11,8 @@ import {
     getCarReducer,
     getCar,
     addCar,
-    editCar
+    editCar,
+    deleteCar
 } from './reducers/carReducers'
 import {
     filterReducer,
@@ -27,7 +28,8 @@ const reducer = combineReducers({
     getCar,
     isUserExist,
     addCar,
-    editCar
+    editCar,
+    deleteCar
 })
 
 const initialState = {};

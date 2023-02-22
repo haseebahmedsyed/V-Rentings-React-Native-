@@ -35,7 +35,7 @@ export const initLocation = (state = {}, action) => {
     }
 }
 
-export const loginReducer = (state = { user: {}, success: false,rents:[],cars:[] }, action) => {
+export const loginReducer = (state = { loading:false,user: {}, success: false,rents:[],cars:[] }, action) => {
     switch (action.type) {
         case LOGIN_REQUEST:
             return {
