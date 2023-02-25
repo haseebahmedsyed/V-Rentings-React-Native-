@@ -11,7 +11,7 @@ const CarCard = ({ car }) => {
     const navigation = useNavigation();
 
     const handleCarDetailsPress = () => {
-        navigation.navigate('cardetail', { carID: car.id })
+        navigation.navigate('cardetail', { car: car })
     }
 
     return (

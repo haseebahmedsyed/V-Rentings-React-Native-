@@ -1,15 +1,7 @@
 import { View, Text, Modal, StyleSheet } from 'react-native'
 import React from 'react'
 import {
-    BallIndicator,
-    BarIndicator,
-    DotIndicator,
-    MaterialIndicator,
-    PacmanIndicator,
-    PulseIndicator,
-    SkypeIndicator,
-    UIActivityIndicator,
-    WaveIndicator,
+    BallIndicator
   } from 'react-native-indicators';
 
 const Loader = ({loading}) => {

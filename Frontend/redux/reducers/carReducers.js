@@ -21,11 +21,57 @@ import {
     BOOK_CAR_SUCCESS,
     BOOK_CAR_FAIL,
     BOOK_CAR_RESET,
-
+    UPLOAD_CAR_PIC_REQUEST,
+    UPLOAD_CAR_PIC_SUCCESS,
+    UPLOAD_CAR_PIC_FAIL,
+    UPLOAD_CAR_PIC_RESET
 } from '../constants/carConstants'
+import {
+    ERROR_RESET
+} from '../constants/accountConstants'
 
+export const uploadCarImageReducer = (state = { loading: false, success: false }, action) => {
+    switch (action.type) {
+        case UPLOAD_CAR_PIC_REQUEST:
+            return {
+                ...state,
+                success: false,
+                loading: true,
+                error: null,
+            }
+        case UPLOAD_CAR_PIC_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                success: action.payload,
+                error: null
+            }
+        case UPLOAD_CAR_PIC_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+                success: false
+            }
+        case UPLOAD_CAR_PIC_RESET:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                success: false
+            }
+        case ERROR_RESET:
+            return {
+                ...state,
+                error: null
+            }
+        default:
+            return { ...state }
+    }
 
-export const getCarReducer = (state = { success: false }, action) => {
+}
+
+export const getCarReducer = (state = { success: false, loading: false }, action) => {
     switch (action.type) {
         case GET_CARS_REQUEST:
             return {
@@ -50,7 +96,11 @@ export const getCarReducer = (state = { success: false }, action) => {
                 error: action.payload,
                 success: false
             }
-
+        case ERROR_RESET:
+            return {
+                ...state,
+                error: null
+            }
         default:
             return { ...state }
     }
@@ -81,6 +131,11 @@ export const getCar = (state = { car: {} }, action) => {
                 error: action.payload,
                 car: {}
             }
+        case ERROR_RESET:
+            return {
+                ...state,
+                error: null
+            }
         default:
             return {
                 ...state
@@ -88,7 +143,7 @@ export const getCar = (state = { car: {} }, action) => {
     }
 }
 
-export const addCar = (state = { success:false,loading:false}, action) => {
+export const addCar = (state = { success: false, loading: false }, action) => {
     switch (action.type) {
         case ADD_CAR_REQUEST:
         case BOOK_CAR_REQUEST:
@@ -114,10 +169,15 @@ export const addCar = (state = { success:false,loading:false}, action) => {
             }
         case ADD_CAR_RESET:
         case BOOK_CAR_RESET:
-            return{
+            return {
                 ...state,
-                loading:false,
-                success:false,
+                loading: false,
+                success: false,
+            }
+        case ERROR_RESET:
+            return {
+                ...state,
+                error: null
             }
         default:
             return {
@@ -125,7 +185,7 @@ export const addCar = (state = { success:false,loading:false}, action) => {
             }
     }
 }
-export const editCar = (state = { success:false,loading:false}, action) => {
+export const editCar = (state = { success: false, loading: false }, action) => {
     switch (action.type) {
         case EDIT_CAR_REQUEST:
             return {
@@ -147,10 +207,15 @@ export const editCar = (state = { success:false,loading:false}, action) => {
                 error: action.payload
             }
         case EDIT_CAR_RESET:
-            return{
+            return {
                 ...state,
-                loading:false,
-                success:false,
+                loading: false,
+                success: false,
+            }
+        case ERROR_RESET:
+            return {
+                ...state,
+                error: null
             }
         default:
             return {
@@ -159,7 +224,7 @@ export const editCar = (state = { success:false,loading:false}, action) => {
     }
 }
 
-export const deleteCar = (state = { success:false,loading:false}, action) => {
+export const deleteCar = (state = { success: false, loading: false }, action) => {
     switch (action.type) {
         case DELETE_CAR_REQUEST:
             return {
@@ -181,10 +246,15 @@ export const deleteCar = (state = { success:false,loading:false}, action) => {
                 error: action.payload
             }
         case DELETE_CAR_RESET:
-            return{
+            return {
                 ...state,
-                loading:false,
-                success:false,
+                loading: false,
+                success: false,
+            }
+        case ERROR_RESET:
+            return {
+                ...state,
+                error: null
             }
         default:
             return {

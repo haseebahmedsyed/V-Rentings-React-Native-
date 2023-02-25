@@ -4,11 +4,14 @@ import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch,useSelector } from 'react-redux';
 import { getCars } from '../redux/actions/carsAction';
+import Loader from '../components/Loader'
+import { ERROR_RESET } from '../redux/constants/accountConstants';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 const Home = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation()
-  const {cars,success} = useSelector(state=>state.getCars)
+  const {cars,success,loading,error} = useSelector(state=>state.getCars)
   const {location,date} = useSelector(state=>state.initLocation)
   const [latitude,setLatitude] = useState(location.latitude)
   const [longitude,setLongitude] = useState(location.longitude)
@@ -21,10 +24,21 @@ const Home = () => {
     if(success){
       navigation.navigate('carlist')
     }
-  },[success,cars])
+    if(error){
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Invalid Date',
+        textBody: `${error}`
+      })
+      dispatch({
+        type: ERROR_RESET
+      })
+    }
+  },[success,cars,error])
 
   return (
     <SafeAreaView>
+      <Loader loading={loading}/>
       <View className='w-full h-full'>
         <MapView
           className='flex-1 w-full h-full'

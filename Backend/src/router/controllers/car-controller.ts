@@ -8,69 +8,77 @@ import { Fiteration } from "../../utils/Filteration";
 import { calculateDistance } from "../../utils/calDistance";
 
 
-export const getCars=async(req: Request, res: Response, next: NextFunction)=>{
-    const { startDate, endDate } = req.body;
-    const {latitude,longitude} = req.query;
+export const getCars = async (req: Request, res: Response, next: NextFunction) => {
+    const { latitude, longitude,startDate, endDate } = req.query;
 
-    if(startDate < new Date(Date.now()).getTime()){
-        return next(createError(400,"Please select valid date"))
+    if (Number(startDate) < new Date(Date.now()).getTime()) {
+        return next(createError(400, "Please select valid date"))
     }
 
-    let cars = await dataSource.createQueryBuilder()
-    .select('car')
-    .from(Car,'car')
-    .leftJoinAndSelect('car.rents','rents')
-    .getMany();
+    try {
+        let cars = await dataSource.createQueryBuilder()
+        .select('car')
+        .from(Car, 'car')
+        .leftJoinAndSelect('car.rents', 'rents')
+        .leftJoinAndSelect('car.images', 'images')
+        .getMany();
 
 
-    let carsFiltered:Car[] = [];
+    let carsFiltered: Car[] = [];
 
-    for(let i= 0 ; i<cars.length ; i++){
-        let bool = false;
-        for(let j = 0 ; j<cars[i].rents.length ; j++) {
-            if(Number(startDate) >= Number(cars[i].rents[j].startDate) && Number(startDate) <= Number(cars[i].rents[j].endDate)){
-                bool=true;
+    let bool = false;
+    for (let i = 0; i < cars.length; i++) {
+        bool = false;
+        for (let j = 0; j < cars[i].rents.length; j++) {
+            if ((Number(startDate) >= Number(cars[i].rents[j].startDate) && Number(startDate) <= Number(cars[i].rents[j].endDate)) || (Number(endDate) >= Number(cars[i].rents[j].startDate) && Number(endDate) <= Number(cars[i].rents[j].endDate))) 
+            {
+                bool = true;
+                break;
             }
         }
-
-        if(bool==false && Number(calculateDistance(Number(cars[i].location.latitude),Number(cars[i].location.longitude),Number(latitude),Number(longitude)))<=15){
+        if (bool == false && Number(calculateDistance(Number(cars[i].location.latitude), Number(cars[i].location.longitude), Number(latitude), Number(longitude))) <= 15) {
             carsFiltered.push(cars[i])
         }
     }
-    
-    let carsResulted = await new Fiteration(carsFiltered,req.query).sortByPrice().sortByRating().sortByDistance()
-    .priceRange().filterTransmission().filterByPassengers().filterBySize()
-    res.json({cars:carsResulted.cars})
+
+    let carsResulted = await new Fiteration(carsFiltered, req.query).sortByPrice().sortByRating().sortByDistance()
+        .priceRange().filterTransmission().filterByPassengers().filterBySize()
+    res.json({ cars: carsResulted.cars })
+
+    } catch (error) {
+        next(createError(500,"Something went wrong."))
+    }
+
 
 }
 
 
-export const cancelBooking=async(req: Request, res: Response, next: NextFunction)=>{
+export const cancelBooking = async (req: Request, res: Response, next: NextFunction) => {
     await dataSource.createQueryBuilder()
-    .delete()
-    .from(Rent,'rent')
-    .where('rent.id =:rentID',{rentID:req.params.rentID})
-    .execute()
+        .delete()
+        .from(Rent, 'rent')
+        .where('rent.id =:rentID', { rentID: req.params.rentID })
+        .execute()
 
     res.json({
-        success:true
+        success: true
     })
 }
 
-export const getCar=async(req: Request, res: Response, next: NextFunction)=>{
+export const getCar = async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.params.carID)
     let car = await dataSource.createQueryBuilder()
-    .select('car')
-    .from(Car,'car')
-    .leftJoinAndSelect('car.rents','rents')
-    .leftJoinAndSelect('rents.user','renter')
-    .leftJoinAndSelect('car.user','owner')
-    .leftJoinAndSelect('car.images','images')
-    .where('car.id = :carID',{carID:req.params.carID})
-    .getOne()
+        .select('car')
+        .from(Car, 'car')
+        .leftJoinAndSelect('car.rents', 'rents')
+        .leftJoinAndSelect('rents.user', 'renter')
+        .leftJoinAndSelect('car.user', 'owner')
+        .leftJoinAndSelect('car.images', 'images')
+        .where('car.id = :carID', { carID: req.params.carID })
+        .getOne()
 
     res.status(200).json({
-        success:true,
+        success: true,
         car
     })
 }
@@ -79,16 +87,16 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
     const { startDate, endDate } = req.body;
     try {
 
-        if(Number(startDate) < new Date(Date.now()).getTime() ||  Number(endDate) < new Date(Date.now()).getTime()){
+        if (Number(startDate) < new Date(Date.now()).getTime() || Number(endDate) < new Date(Date.now()).getTime()) {
             return next(createError(404, "Please select appropriate dates"))
         }
 
         let car = await dataSource.createQueryBuilder()
-        .select('car')
-        .from(Car,'car')
-        .leftJoinAndSelect('car.rents','rent')
-        .where('car.id = :carID',{carID:req.params.carID})
-        .getOne()
+            .select('car')
+            .from(Car, 'car')
+            .leftJoinAndSelect('car.rents', 'rent')
+            .where('car.id = :carID', { carID: req.params.carID })
+            .getOne()
 
         if (!car) {
             return next(createError(404, "No car exist"))
@@ -98,34 +106,34 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
             return next(createError(400, "The car has already been booked"));
         }
 
-        let one_day=1000*60*60*24;
+        let one_day = 1000 * 60 * 60 * 24;
         let difference_ms = endDate - startDate;
-        let days= Math.round(difference_ms/one_day); 
-        let rentPrice = days*car.price
+        let days = Math.round(difference_ms / one_day);
+        let rentPrice = days * car.price
 
         let rent = Rent.create({
             user: req.user,
             car_id: car.id,
             startDate: startDate,
             endDate: endDate,
-            rentPrice:rentPrice,
-            days:days
+            rentPrice: rentPrice,
+            days: days
         })
 
         await rent.save();
 
-        car.rents = [...car.rents,rent];
+        car.rents = [...car.rents, rent];
         await car.save();
-        
+
         let user = await dataSource.createQueryBuilder()
-        .select('user')
-        .from(User,'user')
-        .leftJoinAndSelect('user.rents','rent')
-        .where('user.id = :userID',{userID:req.user.id})
-        .getOne()
+            .select('user')
+            .from(User, 'user')
+            .leftJoinAndSelect('user.rents', 'rent')
+            .where('user.id = :userID', { userID: req.user.id })
+            .getOne()
 
         if (!user) {
-            return next(createError(404,"Login first to a access the resource"))
+            return next(createError(404, "Login first to a access the resource"))
         }
 
         let rents = [...user.rents, rent];
@@ -138,7 +146,7 @@ export const BookCar = async (req: Request, res: Response, next: NextFunction) =
         })
 
     } catch (error) {
-        return next(error)
+        return next(createError(500,"something went wrong."))
     }
 
 
@@ -151,7 +159,7 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
         let user = await dataSource.createQueryBuilder()
             .select('user')
             .from(User, 'user')
-            .leftJoinAndSelect('user.cars','car')
+            .leftJoinAndSelect('user.cars', 'car')
             .where('user.id = :userID', { userID: req.user.id })
             .getOne()
 
@@ -168,7 +176,7 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
             rating: '0.0',
             location: req.body.location,
             user: user,
-            type:req.body.type
+            type: req.body.type
         })
 
         await car.save();
@@ -179,42 +187,54 @@ export const createCar = async (req: Request, res: Response, next: NextFunction)
 
 
     } catch (error) {
-        return next(error)
+        return next(createError(500,"Something went wrong."))
     }
 }
 
-export const getAllCars=async(req:Request,res:Response,next:NextFunction)=>{
-    const cars = await dataSource
-    .createQueryBuilder()
-    .select('car')
-    .from(Car,'car')
-    .leftJoinAndSelect('car.rents','rents')
-    .leftJoinAndSelect('car.images','images')
-    .getMany()
-
-    res.status(200).json({cars})
+export const getAllCars = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const cars = await dataSource
+            .createQueryBuilder()
+            .select('car')
+            .from(Car, 'car')
+            .leftJoinAndSelect('car.rents', 'rents')
+            .leftJoinAndSelect('car.images', 'images')
+            .getMany()
+    
+        res.status(200).json({ cars })
+    } catch (error) {
+        next(createError(500,"Something went wrong.."))
+    }
 }
 
-export const updateCar=async(req:Request,res:Response,next:NextFunction)=>{
-    await dataSource
-    .createQueryBuilder()
-    .update(Car)
-    .set({...req.body})
-    .where('id =:carID',{carID:req.params.carID})
-    .execute();
-
-    res.status(200).json({success:true})
+export const updateCar = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await dataSource
+            .createQueryBuilder()
+            .update(Car)
+            .set({ ...req.body })
+            .where('id =:carID', { carID: req.params.carID })
+            .execute();
+    
+        res.status(200).json({ success: true })
+    } catch (error) {
+        next(createError(500,"Something went wrong please try again later."))
+    }
 }
 
-export const deleteCar=async(req:Request,res:Response,next:NextFunction)=>{
-    console.log('deleting...')
-    await dataSource
-    .createQueryBuilder()
-    .delete()
-    .from(Car,'car')
-    .where('id =:carID',{carID:req.params.carID})
-    .execute();
-
-    res.status(200).json({success:true})
+export const deleteCar = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        await dataSource
+            .createQueryBuilder()
+            .delete()
+            .from(Car, 'car')
+            .where('id =:carID', { carID: req.params.carID })
+            .execute();
+    
+        res.status(200).json({ success: true })
+        
+    } catch (error) {
+        next(createError(500,"Something went wrong please try again later."))
+    }
 }
 

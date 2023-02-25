@@ -5,8 +5,7 @@ import RentModal from './RentModal'
 
 const PresentRents = ({ route }) => {
   const { rents } = route.params
-  console.log(rents)
-
+console.log(rents)
   const filteration = (value, index, array) => {
     return Number(value.endDate) > new Date(Date.now()).getTime()
   }
@@ -15,7 +14,7 @@ const PresentRents = ({ route }) => {
 
       <View className='bg-[#ffffff] flex-1'>
         {
-          rents.filter(filteration).map((rent, index) => {
+          (rents?.length>0) && rents?.filter(filteration).map((rent, index) => {
             return <RentModal rent={rent} index={index}/>
           })
         }

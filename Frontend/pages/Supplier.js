@@ -24,12 +24,12 @@ const Supplier = () => {
     <View className='flex-1 bg-white mt-4'>
       <View className='flex-row items-center space-x-6 mt-3 bg-[#00000020] h-14 w-72 ml-auto mr-auto pl-2'>
         <Fontisto name='person' size={25} color='#00ccbb' />
-        <Text className='text-2xl font-bold'>{car.user.name}</Text>
+        <Text className='text-2xl font-bold '>{car?.user?.name}</Text>
       </View>
 
       <View className='flex-row items-center space-x-6 mt-3 bg-[#00000020] h-14 w-72 ml-auto mr-auto pl-4'>
         <Fontisto name='map-marker-alt' size={25} color='#00ccbb' />
-        <Text className='text-2xl font-bold'>{car.user.address}</Text>
+        <Text className='text-2xl font-bold'>{car?.user?.address}</Text>
       </View>
 
       <Pressable className='w-72 rounded-lg h-10 bg-[#ffffff] ml-4 mt-4 flex-row justify-center items-center space-x-2 ml-auto mr-auto border border-[#00ccbb]' onPress={dialHandler}>

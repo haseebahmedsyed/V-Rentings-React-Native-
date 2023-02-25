@@ -8,6 +8,9 @@ import {
     CHECK_USER_REQUEST,
     CHECK_USER_SUCCESS,
     CHECK_USER_FAIL,
+    GET_ME_REQUEST,
+    GET_ME_SUCCESS,
+    GET_ME_RESET,
 } from '../constants/accountConstants'
 import Client from '../Client'
 
@@ -34,7 +37,6 @@ export const logOut = () => async (dispatch) => {
 }
 
 export const login = (email, password) => async (dispatch) => {
-    console.log(email,password)
     try {
         dispatch({
             type: LOGIN_REQUEST
@@ -48,14 +50,14 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const { data } = await Client.post('/api/user/login', { email, password }, config)
-        {console.log(data.user.cars)}
+        // {console.log(data)}
         dispatch({
             type: LOGIN_SUCCESS,
             payload: data
         })
 
     } catch (error) {
-        console.log("Main error hoon",error)
+        console.log("Main error hoon",error.response.data)
         dispatch({
             type: LOGIN_FAIL,
             payload: error.response.data.message
@@ -89,10 +91,12 @@ export const checkEmail = (email) => async (dispatch) => {
 }
 
 export const getMe=()=>async(dispatch)=>{
-    const {data} = await Client.get('/api/user/getMe',{withCredentials:true});
-    console.log(data)
     dispatch({
-        type:'GET_ME',
-        payload:data
+        type: GET_ME_REQUEST
+    })
+    const {data} = await Client.get('/api/user/getMe',{withCredentials:true});
+    dispatch({
+        type: GET_ME_SUCCESS,
+        payload: data
     })
 }

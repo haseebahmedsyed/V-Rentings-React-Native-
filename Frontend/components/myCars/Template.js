@@ -6,6 +6,7 @@ import { getCar } from '../../redux/actions/carsAction'
 import { useNavigation } from '@react-navigation/native'
 
 const Template = ({ car }) => {
+  console.log(car)
   const navigation = useNavigation();
   const [showModal,setShowModal] = useState(false)
   const dispatch = useDispatch();
@@ -21,13 +22,18 @@ const Template = ({ car }) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView2}>
             <View className='ml-auto mr-auto mt-auto mb-auto'>
-              <TouchableOpacity onPress={() => navigation.navigate('editCar', { car: car })} className='bg-green-800 h-12 w-60 rounded-2xl'>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate('editCar', { car: car })
+                setShowModal(false)
+                }} className='bg-green-800 h-12 w-60 rounded-2xl'>
                 <Text className='text-white font-bold text-xl text-center mt-auto mb-auto'>Edit Car</Text>
               </TouchableOpacity>
 
               <TouchableOpacity onPress={()=>{
-                dispatch(getCar(car.id))
-                navigation.navigate('carrents',{rents:car.rents})}} className='mt-3 bg-blue-800 h-12 w-60 rounded-2xl'>
+                console.log(car.rents)
+                navigation.navigate('carrents',{rents:car.rents})
+                setShowModal(false)
+                }} className='mt-3 bg-blue-800 h-12 w-60 rounded-2xl'>
                 <Text className='text-white font-bold text-xl text-center mt-auto mb-auto'>Show Rents</Text>
               </TouchableOpacity>
             </View>

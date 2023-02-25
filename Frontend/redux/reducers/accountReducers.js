@@ -10,6 +10,10 @@ import {
     LOGOUT_REQUEST,
     LOGOUT_SUCCESS,
     LOGOUT_FAIL,
+    GET_ME_REQUEST,
+    GET_ME_SUCCESS,
+    GET_ME_RESET,
+    ERROR_RESET,
 } from '../constants/accountConstants'
 
 export const initLocation = (state = {}, action) => {
@@ -17,17 +21,17 @@ export const initLocation = (state = {}, action) => {
         case INIT_LOCATION:
             console.log(action.payload)
             return {
+                ...state,
                 location: { latitude: action.payload.latitude, longitude: action.payload.longitude },
-                ...state
             }
 
         case INIT_DATE:
             return {
-                date: action.payload,
-                ...state
-            }
-            return {
-                location: action.payload
+                ...state,
+                date: {
+                    startDate:action.payload.startDate,
+                    endDate: action.payload.endDate
+                }
             }
 
         default:
@@ -35,7 +39,7 @@ export const initLocation = (state = {}, action) => {
     }
 }
 
-export const loginReducer = (state = { loading:false,user: {}, success: false,rents:[],cars:[] }, action) => {
+export const loginReducer = (state = { loading:false,user: {}, success: false,rents:[],cars:[],isGet:false }, action) => {
     switch (action.type) {
         case LOGIN_REQUEST:
             return {
@@ -45,6 +49,7 @@ export const loginReducer = (state = { loading:false,user: {}, success: false,re
                 success: false
             }
         case LOGIN_SUCCESS:
+            console.log("cars------",)
             return {
                 loading: false,
                 error: null,
@@ -76,12 +81,23 @@ export const loginReducer = (state = { loading:false,user: {}, success: false,re
                 cars:[],
                 rents:[]
             }
-        case 'GET_ME':
+        case GET_ME_REQUEST:
+            return{
+                ...state,
+                isGet:false
+            }
+        case GET_ME_SUCCESS:
             return{
                 ...state,
                 user: action.payload.user,
                 cars:action.payload.user.cars,
-                rents:action.payload.user.rents
+                rents:action.payload.user.rents,
+                isGet:true
+            }
+        case GET_ME_RESET:
+            return{
+                ...state,
+                isGet:false
             }
         case LOGOUT_FAIL:
             return{
@@ -90,8 +106,11 @@ export const loginReducer = (state = { loading:false,user: {}, success: false,re
                 error:action.payload,
                 isLoggedOut:false
             }
-
-
+        case ERROR_RESET:
+            return{
+                ...state,
+                error:null
+            }
         default:
             return { ...state }
     }
@@ -117,7 +136,11 @@ export const isUserExist = (state = {}, action) => {
                 error: action.payload,
                 ...state
             }
-
+        case ERROR_RESET:
+            return{
+                ...state,
+                error:null
+            }
         default:
             return { ...state }
     }

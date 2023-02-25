@@ -16,7 +16,6 @@ export const uploadCarImage=async(req : Request,res : Response,next : NextFuncti
         .getOne()
     
         if(car1 instanceof Car){
-            
             let deletePromise = new Promise(async(res,rej)=>{
                 try {
                     for(let i = 0 ; i< car1.images.length ; i++){
@@ -33,37 +32,28 @@ export const uploadCarImage=async(req : Request,res : Response,next : NextFuncti
             })
 
             let imgs:Image[] = []
-            console.log(images)
             for(let j = 0 ; j< images.length ; j++){
                 let image=await Image.create({
                     public_id: images[j].public_id,
                     url: images[j].url,
                     car:car1
-                }).save()
-                // await image.save()                
+                }).save()             
                 imgs.push(image)
             }
-
-            
             deletePromise.then(async(val)=>{
-                // console.log(imgs)
                 car1.images = imgs
                 await car1.save()
                 imgs=[];
-                res.status(200).send({success:true,car:car1})
+                res.status(200).send({success:true})
             })
             .catch(()=>{
                 next(createError(400,"Something Went wrong please try again"))
             })
-
-    
         }
-        
     } catch (error) {
         console.log(error)
         next(createError(400,'Something went wrong try again'))        
     }
-    
 }
 
 export const deleteImages=async(req : Request,res : Response,next : NextFunction)=>{

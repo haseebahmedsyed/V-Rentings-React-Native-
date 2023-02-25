@@ -67,9 +67,6 @@ export const Login=async(req:Request,res:Response,next:NextFunction)=>{
     if(!email || !password){
         return next(createError(400,"Enter credentials properly"))
     }
-    // let user = await User.findOne({where:{
-    //     email:email
-    // }})
 
     const user = await dataSource.    
     createQueryBuilder()
@@ -79,6 +76,8 @@ export const Login=async(req:Request,res:Response,next:NextFunction)=>{
     .leftJoinAndSelect('user.rents','rent')
     .leftJoinAndSelect('car.rents','carrents')
     .leftJoinAndSelect('carrents.user','renter')
+    .leftJoinAndSelect('car.images','images')
+    // .leftJoinAndSelect('car.user','user')
     .where('user.email = :email',{email:email})
     .getOne()
 
@@ -115,6 +114,9 @@ export const getMe=async(req:Request,res:Response,next:NextFunction):Promise<Res
     .from(User, "user")
     .leftJoinAndSelect("user.cars", "car")
     .leftJoinAndSelect('user.rents','rent')
+    .leftJoinAndSelect('car.images','images')
+    .leftJoinAndSelect('car.rents','rents')
+    .leftJoinAndSelect('car.user','user')
     .where('user.id = :userID',{userID:req.user.id})
     .getOne()
 

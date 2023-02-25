@@ -12,3 +12,9 @@ export const INIT_DATE = 'INIT_DATE';
 export const CHECK_USER_REQUEST = 'CHECK_USER_REQUEST';
 export const CHECK_USER_SUCCESS = 'CHECK_USER_SUCCESS';
 export const CHECK_USER_FAIL = 'CHECK_USER_FAIL';
+
+export const GET_ME_REQUEST= 'GET_ME_REQUEST';
+export const GET_ME_SUCCESS= 'GET_ME_SUCCESS';
+export const GET_ME_RESET= 'GET_ME_RESET';
+
+export const ERROR_RESET= 'ERROR_RESET';

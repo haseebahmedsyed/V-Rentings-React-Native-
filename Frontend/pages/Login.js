@@ -8,6 +8,8 @@ import { checkEmail, login } from '../redux/actions/accountActions';
 import { useDispatch, useSelector } from 'react-redux'
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import Loader from '../components/Loader';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import {ERROR_RESET} from '../redux/constants/accountConstants'
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -38,7 +40,17 @@ const Login = () => {
         routes: [{ name: 'Home' }]
       })
     }
-  }, [success])
+    if(error){
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: 'Login Failed',
+        textBody: `${error}`
+      })
+      dispatch({
+        type: ERROR_RESET
+      })
+    }
+  }, [success,error])
 
   // useEffect(()=>{
   //   if(!found){

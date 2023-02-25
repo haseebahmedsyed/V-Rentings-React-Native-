@@ -5,6 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addCar } from '../../redux/actions/carsAction';
 import { getMe } from '../../redux/actions/accountActions';
 import { ADD_CAR_RESET } from '../../redux/constants/carConstants';
+import Loader from '../Loader'
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import {ERROR_RESET} from '../../redux/constants/accountConstants'
+
 
 const CarLocaton = ({ showMap, setShowMap, carCred,setAddCar }) => {
     const {location,date} = useSelector(state=>state.initLocation)
@@ -22,6 +26,16 @@ const CarLocaton = ({ showMap, setShowMap, carCred,setAddCar }) => {
                 type:ADD_CAR_RESET
             })
         }
+        if (error) {
+            Toast.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Error Message',
+                textBody: `${error}`
+            })
+            dispatch({
+                type: ERROR_RESET
+            })
+        }
     },[success,error])
 
     const handleAddCar=()=>{
@@ -29,6 +43,8 @@ const CarLocaton = ({ showMap, setShowMap, carCred,setAddCar }) => {
     }
 
     return (
+        <>
+        <Loader loading={loading}/>
         <Modal
             animationType="slide"
             transparent={true}
@@ -70,6 +86,7 @@ const CarLocaton = ({ showMap, setShowMap, carCred,setAddCar }) => {
                 </View>
             </View>
         </Modal>
+        </>
     )
 }
 

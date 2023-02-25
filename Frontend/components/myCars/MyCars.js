@@ -10,7 +10,6 @@ import AddCar from './AddCar'
 
 const MyCars = () => {
   const { cars } = useSelector(state => state.loginReducer)
-  console.log(cars[2].rents)
   const navigation = useNavigation()
   const [addCar,setAddCar] = useState(false)
 

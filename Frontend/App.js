@@ -35,7 +35,8 @@ export function CarRents({route}){
     <>
     <Tab.Navigator
     screenOptions={({route})=>({
-      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'}
+      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'},
+      tabBarStyle:{height:'100%'}
     })} 
     >
       <Tab.Screen name="Current" initialParams={{rents:rents}} component={PresentRents} />
