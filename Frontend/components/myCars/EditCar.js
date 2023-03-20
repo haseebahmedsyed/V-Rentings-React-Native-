@@ -1,4 +1,4 @@
-import { View, Text, StatusBar, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native'
+import { View, Text, StatusBar, TouchableOpacity, Image, TextInput, ScrollView, Dimensions } from 'react-native'
 import React, { useEffect, useMemo, useState } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
@@ -42,6 +42,7 @@ const EditCar = ({ route }) => {
   const { success: uploadSuccess, loading: uploadLoading, error: uploadError } = useSelector(state => state.uploadCarImageReducer);
   const { isGet } = useSelector(state => state.loginReducer);
   const [images, setImages] = useState(car?.images ? car?.images : [])
+  const { width, height } = Dimensions.get('window')
 
   useEffect(() => {
     if (isGet) {
@@ -150,20 +151,20 @@ const EditCar = ({ route }) => {
     <View className='flex-1 bg-[#ffffff]'>
       <StatusBar backgroundColor="#00ccbb" barStyle="light-content" />
       <Loader loading={uploadLoading || loading || deleteLoading} />
-      <View className='bg-[#00ccbb] h-20'>
+      {/* <View className='bg-[#00ccbb] h-20'>
         <Text className='font-bold text-3xl text-[#ebf6f7] ml-3 text-center mt-5'>V-Rentings</Text>
-      </View>
+      </View> */}
       <View className='bg-[#00ccbb] pl-2 flex-row items-center h-12'>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name='md-arrow-back' size={31} color='#ffffff' />
+          <Ionicons name='md-arrow-back' size={26} color='#ffffff' />
         </TouchableOpacity>
-        <Text className='self-center font-bold ml-auto mr-auto text-2xl text-white'>{car?.name}</Text>
+        <Text style={{ fontSize: width * 0.06 }} className='ml-auto mr-auto text-white font-bold'>{car?.name}</Text>
       </View>
-
       {
         images.length > 0 ?
           <View className='mt-0.5'>
             <SliderBox
+            style={{ height: height / 4, width: width }}
               images={images}
               sliderBoxHeight={200}
               onCurrentImagePressed={index => console.warn(`image ${index} pressed`)}
@@ -173,9 +174,10 @@ const EditCar = ({ route }) => {
           </View> :
           <View>
             <TouchableOpacity className='self-end mr-2 mt-1.5 w-32 h-8' onPress={imageGalleryLaunch}>
-              <Text className='text-[#00ccbb] text-lg font-bold text-center'>Upload Photo</Text>
+              <Text style={{ fontSize: width * 0.044 }} className='text-[#00ccbb] text-center'>Upload Photo</Text>
             </TouchableOpacity>
             <Image
+              style={{ height: height / 5, width: width }}
               source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwCj3ptenifFkfKjY-PaDEDcy9RWVrCar6Ww&usqp=CAU' }}
               className='h-40 w-full rounded-md ml-auto mr-auto -mt-1'
               resizeMode='contain'
@@ -185,11 +187,11 @@ const EditCar = ({ route }) => {
       <ScrollView className='mb-1'>
         <View className='flex-row justify-around items-center'>
           <View>
-            <Text className='text-lg font-bold text-gray-400 text-center'>{car.passengers} Passenger(s)</Text>
+            <Text style={{ fontSize: width * 0.045 }} className='text-gray-400 text-center'>{car.passengers} Passenger(s)</Text>
             <View className='ml-auto mr-auto'>
               <DropDownPicker
-                style={{ width: 170 }}
-                className={`border border-gray-400 mt-2 pl-5 text-xl text-gray-500 mb-3`}
+                style={{ width: width / 2.5 }}
+                className={`border border-gray-400 text-gray-500`}
                 open={showPassengersDropdown}
                 value={passengers}
                 items={passengersList}
@@ -200,7 +202,7 @@ const EditCar = ({ route }) => {
                 placeholder={passengers}
                 disabled={car?.rents?.length > 0}
                 textStyle={{
-                  fontSize: 20,
+                  fontSize: width * 0.05,
                   color: 'gray'
                 }}
               />
@@ -208,12 +210,12 @@ const EditCar = ({ route }) => {
           </View>
           <View >
             <View>
-              <Text className='text-lg font-bold text-gray-400 text-center'>{car.bags} Bag(s)</Text>
+              <Text style={{ fontSize: width * 0.045 }} className='text-gray-400 text-center'>{car.bags} Bag(s)</Text>
             </View>
             <View className='ml-auto mr-auto'>
               <DropDownPicker
-                style={{ width: 170 }}
-                className={`border border-gray-400 mt-2 pl-5 text-xl text-gray-500 mb-3`}
+                style={{ width: width / 2.5 }}
+                className={`border border-gray-400 text-gray-500`}
                 open={showBagsDropdown}
                 value={bags}
                 items={bagList}
@@ -224,7 +226,7 @@ const EditCar = ({ route }) => {
                 placeholder={bags}
                 disabled={car?.rents?.length > 0}
                 textStyle={{
-                  fontSize: 20,
+                  fontSize: width * 0.05,
                   color: 'gray'
                 }}
               />
@@ -232,10 +234,12 @@ const EditCar = ({ route }) => {
           </View>
         </View>
 
-        <View className='ml-auto mr-auto'>
+        <View className='flex-column items-center'>
+        <View>
+        <Text style={{ fontSize: width * 0.045, marginTop: '2%' }} className='text-gray-400 pl-3'>Name</Text>
           <TextInput
-            style={{ width: 370 }}
-            className='border border-gray-400 mt-3 pl-5 text-xl text-gray-500 rounded-md mb-3'
+            style={{ width: width / 1.126, marginTop: '4%', fontSize: width * 0.048,marginTop:'0.5%' }}
+            className='border border-gray-400 text-gray-500 rounded-md pl-3'
             autoCapitalize='none'
             autoComplete='off'
             autoCorrect={false}
@@ -244,28 +248,32 @@ const EditCar = ({ route }) => {
             onChangeText={(txt) => setName(txt)}
             disabled={car?.rents?.length > 0}
           />
-          <TextInput
-            style={{ width: 370 }}
-            className='border border-gray-400 mt-2 w-96 rounded-md pl-5 text-xl text-gray-500 mb-3'
-            autoCapitalize='none'
-            autoComplete='off'
-            autoCorrect={false}
-            underlineColorAndroid='transparent'
-            value={`${price}`}
-            onChangeText={(txt) => setPrice(txt)}
-            keyboardType='numeric'
-            disabled={car?.rents?.length > 0}
-            editable={!car?.rents?.length > 0}
-            selectTextOnFocus={!car?.rents?.length > 0}
-          />
+          </View>
+          <View>
+            <Text style={{ fontSize: width * 0.045, marginTop: '2%' }} className='text-gray-400 pl-3'>Price</Text>
+            <TextInput
+              style={{ width: width / 1.126, fontSize: width * 0.048,marginTop:'0.5%' }}
+              className='border border-gray-400 rounded-md text-gray-500 pl-3'
+              autoCapitalize='none'
+              autoComplete='off'
+              autoCorrect={false}
+              underlineColorAndroid='transparent'
+              value={`${price}`}
+              onChangeText={(txt) => setPrice(txt)}
+              keyboardType='numeric'
+              disabled={car?.rents?.length > 0}
+              editable={!car?.rents?.length > 0}
+              selectTextOnFocus={!car?.rents?.length > 0}
+            />
+          </View>
         </View>
 
-        <View className='flex-row justify-around items-center'>
+        <View className='flex-row justify-around items-center mt-2'>
           <View>
-            <Text className='text-lg font-bold text-gray-400 text-center'>Type</Text>
+            <Text style={{ fontSize: width * 0.045 }} className='text-gray-400 text-center'>Type</Text>
             <View className='ml-auto mr-auto'>
               <DropDownPicker
-                style={{ width: 170 }}
+                style={{ width: width / 2.5 }}
                 className={`border border-gray-400 mt-2 pl-5 text-xl text-gray-500 mb-3 `}
                 open={showTypeDropdown}
                 value={type}
@@ -285,11 +293,11 @@ const EditCar = ({ route }) => {
           </View>
           <View >
             <View>
-              <Text className='text-lg font-bold text-gray-400 text-center'>Transmission</Text>
+              <Text style={{ fontSize: width * 0.045 }} className='text-gray-400 text-center'>Transmission</Text>
             </View>
             <View className='ml-auto mr-auto'>
               <DropDownPicker
-                style={{ width: 170 }}
+                style={{ width: width / 2.5 }}
                 className={`border border-gray-400 mt-2 pl-5 text-xl text-gray-500 mb-3 `}
                 open={showTransmissionDropdown}
                 value={transmission}
@@ -308,21 +316,38 @@ const EditCar = ({ route }) => {
             </View>
           </View>
         </View>
-        <View className='ml-auto mr-auto'>
+        <View className='flex-column items-center justify-center mt-5'>
           {
-            car?.rents?.length > 0 ? <Text className='text-center text-xl text-red-500 mb-2 mt-5'>As far as car is booked, you can't edit it.</Text> :
+            car?.rents?.length > 0 ? <Text style={{fontSize:width*0.045}} className='text-center text-red-500 '>As far as car is booked, you can't edit it.</Text> :
               <>
-                <TouchableOpacity onPress={() => {
-                  dispatch(editCar(car.id, { bags, type, passengers, transmission, name, price }))
-                }} disabled={checkChanges()} className={`${checkChanges() ? 'mt-7 bg-[#ffffff] border border-[#00ccbb] w-96 h-12 rounded-2xl text-center justify-center items-center' : 'mt-7 bg-[#00ccbb] w-96 h-12 rounded-2xl text-center justify-center items-center'}`}>
-                  <Text className={`${checkChanges() ? 'text-[#00ccbb] font-bold text-xl' : 'text-white font-bold text-xl'} `}>Save Changes</Text>
+                <TouchableOpacity
+                  style={{ width: width / 1.1, height: height / 16 }}
+                  onPress={() => {
+                    dispatch(editCar(car.id, { bags, type, passengers, transmission, name, price }))
+                  }} disabled={checkChanges()} className={`${checkChanges() ? 'bg-[#ffffff] border border-[#00ccbb] rounded-2xl' : 'bg-[#00ccbb] rounded-2xl'}`}>
+                  <Text style={{
+                    fontSize: width * 0.05,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    marginBottom: 'auto',
+                    marginTop: 'auto',
+                  }} className={`${checkChanges() ? 'text-[#00ccbb]' : 'text-white'} `}>Save Changes</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => {
-                  console.log("delete it")
-                  dispatch(deleteCar(car.id))
-                }} className='mt-3 bg-red-500 w-96 h-12 rounded-2xl text-center justify-center items-center'>
-                  <Text className='text-white font-bold text-xl'>Delete</Text>
+                <TouchableOpacity
+                  style={{ width: width / 1.1, height: height / 16 }}
+                  onPress={() => {
+                    dispatch(deleteCar(car.id))
+                  }} className='mt-3 bg-red-500 w-96 h-12 rounded-2xl text-center justify-center items-center'>
+                  <Text
+                    style={{
+                      fontSize: width * 0.05,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                      marginBottom: 'auto',
+                      marginTop: 'auto',
+                    }}
+                    className='text-white'>Delete</Text>
                 </TouchableOpacity>
               </>
           }

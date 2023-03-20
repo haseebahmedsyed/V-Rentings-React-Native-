@@ -1,4 +1,4 @@
-import { ActivityIndicator, View, Text, SafeAreaView, TextInput, TouchableOpacity, Image, PermissionsAndroid, StatusBar, StyleSheet, Modal } from 'react-native'
+import { ActivityIndicator, View, Text, SafeAreaView, TextInput, TouchableOpacity, Image, PermissionsAndroid, StatusBar, StyleSheet, Modal,useWindowDimensions, Dimensions } from 'react-native'
 import React, { useRef, useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import Geolocation from 'react-native-geolocation-service';
@@ -11,7 +11,25 @@ import Loader from '../components/Loader';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import {ERROR_RESET} from '../redux/constants/accountConstants'
 
+const calculateFont=(num)=>{
+  let width = Dimensions.get('window').width
+  let height = Dimensions.get('window').height
+  let cal = height/num;
+  return height/cal;
+}
+
+const getWidth=()=>{
+  return Dimensions.get('window').width
+}
+const getHeight=()=>{
+  return Dimensions.get('window').height
+}
+const getScale=()=>{
+  return Dimensions.get('window').scale
+}
+
 const Login = () => {
+  // const {width,height, scale, fontScale} = useWindowDimensions()
   const dispatch = useDispatch();
   const { success, error, loading, user } = useSelector(state => state.loginReducer)
   const { found, error: foundError, loading: foundLoading } = useSelector(state => state.isUserExist)
@@ -93,19 +111,22 @@ const Login = () => {
       <StatusBar backgroundColor="#69bfb8" barStyle="light-content" />
       <Loader loading={loading}/>
       <LinearGradient className='h-60 w-full' start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#00b5a5', '#05f7e3', '#00ccbb']} >
-        <Text className='font-bold text-5xl text-[#ebf6f7] ml-3 text-center mt-auto mb-auto'>
+        <Text style={styles.mainHeading} className='font-bold text-[#ebf6f7] text-center'>
           V-Rentings
         </Text>
       </LinearGradient>
 
-      <View className='flex items-center justify-center -mt-6 bg-[#ffffff] rounded-t-3xl z-999'>
+      <View style={styles.whiteView} 
+      // className='flex items-center justify-center -mt-6 bg-[#ffffff] rounded-t-3xl z-999'
+      >
         <View className=' mt-20'>
           <View className='flex-row items-center'>
-            <View className='absolute left-4'>
+            <View className='absolute left-5 bottom-3'>
               <MaterialCommunityIcons name='email' size={26} color='#00ccbb' />
             </View>
             <TextInput
-              className='border border-gray-400 w-80 rounded-3xl pl-14 text-xl text-gray-500 pr-5'
+              style={styles.textInput}
+              className='border border-gray-400 text-gray-500 pr-5'
               autoCapitalize='none'
               autoComplete='off'
               autoCorrect={false}
@@ -116,11 +137,12 @@ const Login = () => {
             />
           </View>
           <View className='flex-row items-center'>
-            <View className='absolute left-4 bottom-3'>
+            <View className='absolute left-5 bottom-3.5'>
               <MaterialCommunityIcons name='lock' size={26} color='#00ccbb' />
             </View>
             <TextInput
-              className='border border-gray-400 mt-7 w-80 rounded-3xl pl-14 text-xl text-gray-500'
+            style={styles.textInput}
+              className='border border-gray-400 text-gray-500'
               autoCapitalize='none'
               autoComplete='off'
               autoCorrect={false}
@@ -131,16 +153,19 @@ const Login = () => {
               value={credentials.password}
             />
           </View>
-          <TouchableOpacity disabled={credentials.email == '' || credentials.password == ''} onPress={handleLogin} className='mt-7 bg-[#00ccbb] w-80 h-12 rounded-2xl text-center justify-center items-center'>
-            <Text className='text-white font-bold text-xl'>Login</Text>
+          <TouchableOpacity style={styles.login}  disabled={credentials.email == '' || credentials.password == ''} onPress={handleLogin}>
+            <Text 
+            style={styles.loginText}
+            >Login</Text>
           </TouchableOpacity>
         </View>
         <View className='flex-row items-center justify-center mt-5 h-10'>
           <Text className='text-lg font-bold text-gray-500'>Don't have any account ? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("SignUp")}><Text className='font-bold text-lg text-[#00ccbb]'>Register</Text></TouchableOpacity>
         </View>
-      </View>
-      <TouchableOpacity onPress={signIn} className='ml-auto mr-auto flex-row space-x-3 border h-14 w-72 rounded-lg justify-center items-center mt-5 border-gray-400 bg-[#ffffff] shadow-2xl'>
+      <TouchableOpacity style={styles.googleBtn} onPress={signIn}
+      className='border rounded-lg border-gray-400 shadow-2xl'
+      >
         <View>
           <Image
             source={require('../components/google.png')}
@@ -149,10 +174,64 @@ const Login = () => {
         </View>
         <Text className='text-xl font-bold text-gray-600'>Contine with Google</Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView >
   )
 }
 
+const styles = StyleSheet.create({
+  textInput:{
+    width:getWidth()/1.19,
+    marginTop:'5%',
+    borderRadius: 50/getScale(),
+    paddingLeft:85/getScale(),
+    fontSize: calculateFont(20),
+    marginLeft:'auto',
+    marginRight:'auto',
+    height:'68%'
+   },
+   mainHeading:{
+    fontSize: calculateFont(45),
+    marginTop:'auto',
+    marginBottom:'auto', 
+   },
+   login:{
+    backgroundColor:'#00ccbb',
+    height:getHeight()/15,
+    width:getWidth()/1.19,
+    borderRadius: 50/getScale(),
+    marginTop: '5%',
+    marginLeft:'auto',
+    marginRight:'auto',
+   },
+   loginText:{
+    fontWeight:'bold',
+    textAlign:'center',
+    color:'white',
+    fontSize: calculateFont(22),
+    marginTop:'auto',
+    marginBottom:'auto'
+   },
+   whiteView:{
+    width:getWidth(),
+    backgroundColor:'white',
+    marginTop:'-10%',
+    borderRadius:50/getScale(),
+    flex:1
+   },
+   googleBtn:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'space-evenly',
+    width:getWidth()/1.19,
+    backgroundColor:'white',
+    marginLeft:'auto',
+    marginRight:'auto',
+    height:getHeight()/15,
+    alignItems:'center',
+    marginTop:'7%'
+   }
+})
 
 
 export default Login

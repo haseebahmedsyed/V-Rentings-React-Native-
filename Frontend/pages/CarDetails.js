@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StatusBar, Image } from 'react-native'
+import { View, Text, TouchableOpacity, StatusBar, Image, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { bookCar, calculateRent, getCar } from '../redux/actions/carsAction';
@@ -9,17 +9,16 @@ import { DetailsTab2 } from '../App';
 import { useNavigation } from '@react-navigation/native';
 import { SliderBox } from "react-native-image-slider-box";
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
-import {ERROR_RESET} from '../redux/constants/accountConstants'
+import { ERROR_RESET } from '../redux/constants/accountConstants'
 
 
 const CarDetails = ({ route }) => {
     const dispatch = useDispatch()
     const { car } = route.params
-    console.log(car)
-    // const { car } = useSelector(state => state.getCar)
     const { success, loading, error } = useSelector(state => state.addCar)
     const navigation = useNavigation()
     const [images, setImages] = useState([])
+    const { height, width } = Dimensions.get('window')
 
     useEffect(() => {
         let carImg = []
@@ -28,12 +27,6 @@ const CarDetails = ({ route }) => {
         }
         setImages(carImg)
     }, [])
-
-
-    // useEffect(() => {
-    //     console.log(route)
-    //     dispatch(getCar(route.params.carID));
-    // }, [])
 
     useEffect(() => {
         if (success) {
@@ -54,24 +47,19 @@ const CarDetails = ({ route }) => {
     return (
         <>
             <StatusBar backgroundColor="#00ccbb" barStyle="light-content" />
-            {/* <View className='bg-[#00ccbb] h-14'>
-                <Text className='font-bold text-3xl text-[#ebf6f7] ml-3 text-center mt-5'>V-Rentings</Text>
-            </View> */}
             <View className='bg-[#00ccbb] pl-2 flex-row items-center h-20'>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Ionicons name='md-arrow-back' size={31} color='#ffffff' />
+                    <Ionicons name='md-arrow-back' size={27} color='#ffffff' />
                 </TouchableOpacity>
                 <View className='flex-column justify-center items-center ml-auto mr-auto w-ful'>
-                    <Text className='font-bold text-2xl text-white'>{car.type}</Text>
-                    <Text className='font-bold text-xl text-gray-100'>{car.name} or similar</Text>
+                    <Text style={{ fontSize: width * 0.065, fontWeight: 'bold' }} className='text-white'>{car.type}</Text>
+                    <Text style={{ fontSize: width * 0.05 }} className='text-gray-100'>{car.name} or similar</Text>
                 </View>
             </View>
-            <View className='bg-[#00ccbb] pl-2 flex-row items-center h-12 pl-4'>
-                <Text className='text-white text-xl font-bold'>Total- $ {(car.price) * calculateRent()}</Text>
+            <View className='bg-[#00ccbb] flex-row items-center pl-4 h-12'>
+                <Text style={{ fontSize: width * 0.05, textAlign: 'center' }} className='text-white'>Total- $ {(car.price) * calculateRent()}</Text>
             </View>
             <View className='bg-white'>
-                {/* <Text className='font-bold text-2xl ml-2'>{car.type}</Text>
-                <Text className='text-xl ml-3 text-gray-400'>{car.name} or similar</Text> */}
                 {
                     car?.images?.length > 0 ? <View className='h-52 w-full rounded-md ml-auto mr-auto  mb-1.5'>
                         <SliderBox
@@ -84,8 +72,9 @@ const CarDetails = ({ route }) => {
                     </View> :
                         <View>
                             <Image
+                                style={{ height: height / 4.5, width: width }}
                                 source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwCj3ptenifFkfKjY-PaDEDcy9RWVrCar6Ww&usqp=CAU' }}
-                                className='h-48 w-full rounded-md ml-auto mr-auto -mt-1'
+                                className='rounded-md ml-auto mr-auto'
                                 resizeMode='contain'
                             />
                         </View>
@@ -95,28 +84,38 @@ const CarDetails = ({ route }) => {
                         <View className='ml-auto mr-auto'>
                             <Fontisto name='persons' size={18} color='#000000' />
                         </View>
-                        <Text className='text-lg font-bold text-gray-400'>{car.passengers} Passenger(s)</Text>
+                        <Text style={{ fontSize: width * 0.045 }} className='text-gray-400'>{car.passengers} Passenger(s)</Text>
                     </View>
                     <View >
                         <View className='ml-auto mr-auto'>
                             <Fontisto name='shopping-bag' size={18} color='#000000' />
                         </View>
-                        <Text className='text-lg font-bold text-gray-400'>{car.bags} Bag(s)</Text>
+                        <Text style={{ fontSize: width * 0.045 }} className='text-gray-400'>{car.bags} Bag(s)</Text>
                     </View>
                     <View>
                         <View className='ml-auto mr-auto'>
                             <MaterialCommunityIcons name='temperature-celsius' size={21} color='#000000' />
                         </View>
-                        <Text className='text-lg font-bold text-gray-400'>Air Condition</Text>
+                        <Text style={{ fontSize: width * 0.045 }} className='text-gray-400'>Air Condition</Text>
                     </View>
                 </View>
             </View>
             <DetailsTab2 />
 
-            <View className='bg-white mb-2'>
-                <TouchableOpacity onPress={() => dispatch(bookCar(car.id))} className='bg-[#00ccbb] h-12 w-72 ml-auto mr-auto rounded-full mt-2'>
+            <View className='bg-white' style={{
+                height:'7%'
+            }}>
+                <TouchableOpacity
+                    style={{
+                        width: '75%',
+                        height: '80%'
+                    }}
+                    onPress={() => dispatch(bookCar(car.id))} className='bg-[#00ccbb] h-12 w-72 ml-auto mr-auto rounded-full mt-2'>
                     <Text
-                        className='text-center mt-auto mb-auto text-white font-bold text-2xl '
+                        style={{
+                            fontSize:width*0.046
+                        }}
+                        className='text-center mt-auto mb-auto text-white font-bold '
                     >
                         Book Now
                     </Text>

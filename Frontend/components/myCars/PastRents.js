@@ -16,7 +16,9 @@ const PastRents = ({ route }) => {
       <View className='bg-[#ffffff] flex-1'>
         {
           rents.filter(filteration).map((rent, index) => {
-            return <View key={rent.id}><RentModal rent={rent} index={index}/></View>
+            return <View key={rent.id}>
+            <RentModal rent={rent} index={index}/>
+            </View>
           })
         }
       </View>

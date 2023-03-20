@@ -4,7 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home1 from './components/Home1';
 import DrawerContent from './DrawerContent';
 import MyCars from './components/myCars/MyCars';
-import MyRents from './components/myRents/MyRents';
+// import MyRents from './components/myRents/MyRents';
+import { MyRents } from './App';
 
 export const Drawer = createDrawerNavigator();
 

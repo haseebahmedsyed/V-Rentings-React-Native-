@@ -64,7 +64,7 @@ cloudinary.config({
     api_secret: "gWRb_l_GDqE5qCBmU9os-Oj4bEY"
   });
 
-app.listen(4000,()=>{
-    console.log("Listening to port 4000...")
+app.listen(5000,()=>{
+    console.log("Listening to port 5000...")
     dataSource.connect().then(()=>console.log("Connected to database")).catch(e=>console.log(e))
 })

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TextInput, PermissionsAndroid,TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, TextInput, PermissionsAndroid,TouchableOpacity,Dimensions } from 'react-native'
 import React, { useRef, useState, useEffect } from 'react'
 import MapView, { Marker } from 'react-native-maps';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import { ERROR_RESET } from '../redux/constants/accountConstants';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 
 const Home = () => {
+  const {width, height} = Dimensions.get('window');
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const {cars,success,loading,error} = useSelector(state=>state.getCars)
@@ -63,8 +64,23 @@ const Home = () => {
           />
         </MapView>
 
-      <TouchableOpacity onPress={handleSearch} className='flex mt-5 bg-[#00ccbb] w-80 h-12 rounded-3xl text-center justify-center items-center ml-auto mr-auto mb-3'>
-        <Text className='text-white font-bold text-xl'>Search</Text>
+      <TouchableOpacity
+      style={{
+          width:'75%',
+          height:'6.5%',
+          marginTop:'2%',
+          marginBottom:'2%',
+          marginLeft:'auto',
+          marginRight:'auto',
+          borderRadius:width*20,
+        }}
+       onPress={handleSearch} className='bg-[#00ccbb] text-center'>
+        <Text style={{
+          fontSize:width*0.056,
+          textAlign:'center',
+          marginTop:'auto',
+          marginBottom:'auto',
+        }} className='text-white font-bold'>Search</Text>
       </TouchableOpacity>
       </View>
     </SafeAreaView>

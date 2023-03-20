@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StatusBar, ScrollView, Modal, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StatusBar, ScrollView, Modal, StyleSheet, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CarCard from '../components/CarCard'
@@ -16,6 +16,7 @@ const CarList = () => {
     const { price: price1, size: size1, transmission: transmission1 } = useSelector(state => state.filterReducer)
     const [modal1, setModal1] = useState(false)
     const [modal2, setModal2] = useState(false)
+    const { width, height } = Dimensions.get('window')
 
     return (
         <ScrollView className='flex-1 mb-2'>
@@ -24,18 +25,37 @@ const CarList = () => {
             <SortModal modal2={modal2} setModal2={setModal2} />
 
             <StatusBar backgroundColor="#00ccbb" barStyle="light-content" />
-            
+
             <View className='bg-[#00ccbb] h-36'>
-                <Text className='font-bold text-3xl text-[#ebf6f7] ml-3 text-center mt-5'>V-Rentings</Text>
-                <View className='mt-2 ml-4'>
-                    <Text className='text-gray-500 text-[#ebf6f7] text-lg font-bold'>7 jan,2023 - 14 jan,2023</Text>
+                <Text
+                    style={{
+                        fontSize: width * 0.07,
+                        marginTop: '4%'
+                    }}
+                    className='font-bold text-[#ebf6f7] text-center'>V-Rentings</Text>
+                <View className='ml-auto mr-auto mt-2.5'>
+                    <Text
+                        style={{
+                            fontSize: width * 0.045
+                        }}
+                        className='text-gray-500 text-[#ebf6f7]'>7 jan,2023 - 14 jan,2023</Text>
                 </View>
-                <View className='flex-row space-x-2 flex-end justify-end mr-5 mt-2 items-center'>
-                    <TouchableOpacity onPress={() => setModal1(true)} className='bg-[#07b5a7] w-24 h-9 rounded-md '>
-                        <Text className='text-white text-lg text-center mt-auto mb-auto'>Filter</Text>
+                <View className='flex-row space-x-2 justify-end items-center ml-auto mr-auto'>
+                    <TouchableOpacity
+                        style={{
+                            height: '45%',
+                            width: '30%',
+                        }}
+                        onPress={() => setModal1(true)} className='bg-[#07b5a7] rounded-md '>
+                        <Text style={{fontSize:width*0.04}} className='text-white text-center mt-auto mb-auto'>Filter</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setModal2(true)} className='bg-[#07b5a7] w-24 h-9 rounded-md'>
-                        <Text className='text-white text-lg text-center mt-auto mb-auto'>Sort</Text>
+                    <TouchableOpacity
+                        style={{
+                            height: '45%',
+                            width: '30%'
+                        }}
+                        onPress={() => setModal2(true)} className='bg-[#07b5a7] rounded-md'>
+                        <Text style={{fontSize:width*0.04}} className='text-white text-center mt-auto mb-auto'>Sort</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -44,7 +64,11 @@ const CarList = () => {
                     <View className='ml-5'>
                         <FontAwesome name='check-circle' size={20} color='#00ccbb' />
                     </View>
-                    <Text className='text-lg text-center text-[#00ccbb] '>Book today with flexible cancellation</Text>
+                    <Text
+                        style={{
+                            fontSize: width * 0.044
+                        }}
+                        className='text-center text-[#00ccbb] '>Book today with flexible cancellation</Text>
                 </View>
             </View>
 

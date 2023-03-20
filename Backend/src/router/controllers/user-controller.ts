@@ -77,7 +77,7 @@ export const Login=async(req:Request,res:Response,next:NextFunction)=>{
     .leftJoinAndSelect('car.rents','carrents')
     .leftJoinAndSelect('carrents.user','renter')
     .leftJoinAndSelect('car.images','images')
-    // .leftJoinAndSelect('car.user','user')
+    .leftJoinAndSelect('car.user','users')
     .where('user.email = :email',{email:email})
     .getOne()
 
@@ -116,7 +116,7 @@ export const getMe=async(req:Request,res:Response,next:NextFunction):Promise<Res
     .leftJoinAndSelect('user.rents','rent')
     .leftJoinAndSelect('car.images','images')
     .leftJoinAndSelect('car.rents','rents')
-    .leftJoinAndSelect('car.user','user')
+    .leftJoinAndSelect('car.user','owner')
     .where('user.id = :userID',{userID:req.user.id})
     .getOne()
 

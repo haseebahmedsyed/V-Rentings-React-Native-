@@ -11,24 +11,31 @@ import AddCar from './AddCar'
 const MyCars = () => {
   const { cars } = useSelector(state => state.loginReducer)
   const navigation = useNavigation()
-  const [addCar,setAddCar] = useState(false)
+  const [addCar, setAddCar] = useState(false)
 
 
   return (
-    <View className='bg-[#ffffff0] h-full w-full'>
+    <View className='h-full w-full'>
       <Header />
-      <AddCar addCar={addCar} setAddCar={setAddCar}/>
-      <FlatList
-        data={cars && cars}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        renderItem={({ item }) => (<Template car={item} />)}
-      />
+      <AddCar addCar={addCar} setAddCar={setAddCar} />
+        <FlatList
+          style={{
+            height:'100%',
+            width:'100%'
+          }}
+          // columnWrapperStyle={{ marginLeft:'auto', marginRight:'auto'}}
+          data={cars && cars}
+          extraData={cars}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          renderItem={({ item }) => (<Template car={item} />)}
+        />
 
-      <View className='bg-[#00ccbb] absolute rounded-full bottom-5 right-4 w-16 h-16'>
-        <TouchableOpacity onPress={()=>setAddCar(true)} className='bg-[#00ccbb] w-16 h-16 rounded-full'>
+      <View className='bg-[#00ccbb] absolute rounded-full bottom-6 right-5 w-14 h-14'>
+        <TouchableOpacity onPress={() => setAddCar(true)} className='bg-[#00ccbb] w-14 h-14 rounded-full'>
           <View className='ml-auto mr-auto mt-auto mb-auto'>
-            <FontAwesome name='plus' size={30} color='#ffffff' />
+          
+            <FontAwesome name='plus' size={25} color='#ffffff' />
           </View>
         </TouchableOpacity>
 

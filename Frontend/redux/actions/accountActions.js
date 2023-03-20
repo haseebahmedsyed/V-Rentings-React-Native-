@@ -50,7 +50,7 @@ export const login = (email, password) => async (dispatch) => {
         }
 
         const { data } = await Client.post('/api/user/login', { email, password }, config)
-        // {console.log(data)}
+        {console.log(data)}
         dispatch({
             type: LOGIN_SUCCESS,
             payload: data

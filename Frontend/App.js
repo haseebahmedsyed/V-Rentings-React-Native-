@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {Dimensions} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Login from './pages/Login';
@@ -25,6 +17,10 @@ import EditCar from './components/myCars/EditCar';
 import PresentRents from './components/myCars/PresentRents';
 import PastRents from './components/myCars/PastRents';
 import Octicons from 'react-native-vector-icons/Octicons';
+import MyCurrentRents from './components/myRents/MyCurrentRents';
+import MyPastRents from './components/myRents/MyPastRents';
+import Header from './components/Header';
+
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,8 +31,7 @@ export function CarRents({route}){
     <>
     <Tab.Navigator
     screenOptions={({route})=>({
-      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'},
-      tabBarStyle:{height:'100%'}
+      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'}
     })} 
     >
       <Tab.Screen name="Current" initialParams={{rents:rents}} component={PresentRents} />
@@ -46,12 +41,32 @@ export function CarRents({route}){
   )
 }
 
+export function MyRents({route}){
+  return (
+    <>
+    <Header/>
+    <Tab.Navigator
+    screenOptions={({route})=>({
+      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'}
+    })} 
+    >
+      <Tab.Screen name="Current" component={MyCurrentRents} />
+      <Tab.Screen name="Past" component={MyPastRents} />
+    </Tab.Navigator>
+    </>
+  )
+}
+
 export function DetailsTab2({route}){
+  const {width, height} = Dimensions.get('window')
   return (
     <>
     <Tab.Navigator
     screenOptions={({route})=>({
-      tabBarLabelStyle:{fontSize:18 , fontWeight:'bold',color:'#00ccbb'}
+      tabBarLabelStyle:{fontSize:width*0.038 , fontWeight:'bold',color:'#00ccbb'},
+      tabBarIndicatorStyle:{
+        backgroundColor:'#00ccbb'
+      }
     })} 
     >
       <Tab.Screen name="Included" component={Included} />

@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable,StyleSheet,Modal, TouchableOpacity } from 'react-native'
+import { View, Text, Image, Pressable,StyleSheet,Modal, TouchableOpacity,Dimensions } from 'react-native'
 import React, { useEffect,useState } from 'react'
 import { useDispatch,useSelector } from 'react-redux'
 import { getCar } from '../../redux/actions/carsAction'
@@ -6,10 +6,11 @@ import { getCar } from '../../redux/actions/carsAction'
 import { useNavigation } from '@react-navigation/native'
 
 const Template = ({ car }) => {
-  console.log(car)
+  // console.log(car)
   const navigation = useNavigation();
   const [showModal,setShowModal] = useState(false)
   const dispatch = useDispatch();
+  const {width,height} = Dimensions.get('window')
   return (
     <>
       <Modal
@@ -41,12 +42,22 @@ const Template = ({ car }) => {
         </View>
       </Modal>
       {/* <Pressable onPress={() => navigation.navigate('editCar', { car: car })} className='bg-[#ffffff] w-44 h-44 rounded-2xl ml-5 mt-5 shadow-2xl'> */}
-      <Pressable onPress={() => setShowModal(true)} className='bg-[#ffffff] w-44 h-44 rounded-2xl ml-5 mt-5 shadow-2xl'>
+      <Pressable
+        style={{
+          width:'45%',
+          height:height/4.5,
+          marginLeft:'3.5%'
+        }}
+       onPress={() => setShowModal(true)} className='bg-[#ffffff] rounded-2xl mt-3 shadow-2xl'>
         <Image
+          style={{
+            width:'70%',
+            height:'50%',
+          }}
           source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwCj3ptenifFkfKjY-PaDEDcy9RWVrCar6Ww&usqp=CAU' }}
           className='w-28 h-28 ml-auto mr-auto mt-auto mb-auto'
         />
-        <Text className='text-2xl font-bold mt-auto mb-auto ml-auto mr-auto'>{car.name}</Text>
+        <Text style={{fontSize:width*0.05}} className='font-bold mt-auto mb-auto ml-auto mr-auto text-gray-400'>{car.name}</Text>
       </Pressable>
     </>
   )

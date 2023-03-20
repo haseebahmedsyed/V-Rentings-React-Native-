@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from "react";
-import { SafeAreaView, StyleSheet, View, Text,TouchableOpacity,Image, PermissionsAndroid,StatusBar } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text,TouchableOpacity,Image, PermissionsAndroid,StatusBar, Dimensions } from "react-native";
 import DateRangePicker from "rn-select-date-range";
 import Header from "./Header";
 import { useNavigation } from "@react-navigation/native";
@@ -10,6 +10,7 @@ const Home1 = () => {
   const dispatch = useDispatch()
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const {height, width} = Dimensions.get('window')
 
   const requestCameraPermission = async () => {
     try {
@@ -63,7 +64,14 @@ const Home1 = () => {
     <StatusBar backgroundColor="#00ccbb" barStyle="light-content" />
     <Header/>
       <View style={styles.container}>
-      <Text className='text-2xl text-center mb-7 font-bold text-gray-400'>Select the Dates</Text>
+      <Text className='font-bold text-gray-400'
+      style={{
+        textAlign:'center',
+        fontWeight:'bold',
+        fontSize:width * 0.075,
+        marginBottom:'7%'
+      }}
+      >Select the Dates</Text>
         <DateRangePicker
           onSelectDateRange={(range) => {
             setRange(range);
@@ -80,12 +88,23 @@ const Home1 = () => {
           responseFormat="YYYY-MM-DD"
           selectedDateContainerStyle={styles.selectedDateContainerStyle}
           selectedDateStyle={styles.selectedDateStyle}
-          clearBtnTitle=<Text className='text-red-600 font-bold text-lg'>Clear</Text>
-          confirmBtnTitle=<Text className='text-green-600 font-bold text-lg'>Confirm</Text>
+          clearBtnTitle=<Text style={{
+            fontSize:width*0.042
+          }} className='text-red-600 font-bold'>Clear</Text>
         />
       </View>
-        <TouchableOpacity disabled={latitude==0 || longitude==0 || selectedRange=={}} onPress={()=>navigation.navigate("Home2")} className='flex mt-5 bg-[#00ccbb] w-80 h-12 rounded-3xl text-center justify-center items-center ml-auto mr-auto'>
-          <Text className='text-white font-bold text-xl'>Continue</Text>
+        <TouchableOpacity style={{
+          width:'75%',
+          height:'6%'
+        }} disabled={latitude==0 || longitude==0 || selectedRange=={}} onPress={()=>navigation.navigate("Home2")} className='flex mt-5 bg-[#00ccbb] w-80 h-12 rounded-3xl text-center justify-center items-center ml-auto mr-auto'>
+          <Text
+          style={{
+            fontWeight:'bold',
+            fontSize:width*0.055,
+            marginTop:'auto',
+            marginBottom:'auto'
+          }}
+           className='text-white font-bold text-xl'>Continue</Text>
         </TouchableOpacity>
     </SafeAreaView>
   )
@@ -93,15 +112,15 @@ const Home1 = () => {
 
 const styles = StyleSheet.create({
     container: {
-      margin: 20,
-      marginTop:60
+      margin: '7%',
+      marginTop:'13%'
     },
     selectedDateContainerStyle: {
       height: 35,
       width: "100%",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "blue",
+      backgroundColor: "#00ccbb",
     },
     selectedDateStyle: {
       fontWeight: "bold",

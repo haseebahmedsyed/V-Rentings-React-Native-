@@ -49,7 +49,6 @@ export const loginReducer = (state = { loading:false,user: {}, success: false,re
                 success: false
             }
         case LOGIN_SUCCESS:
-            console.log("cars------",)
             return {
                 loading: false,
                 error: null,
