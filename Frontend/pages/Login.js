@@ -36,7 +36,7 @@ const Login = () => {
   const navigation = useNavigation();
   const [credentials, setCredentials] = useState({
     email: 'syedhaseebahmed380@gmail.com',
-    password: 'syedhaseebahmed38'
+    password: ''
   })
   const [userInfo, setUserInfo] = useState({
     name: '',
